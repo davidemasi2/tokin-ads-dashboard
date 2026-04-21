@@ -1,0 +1,918 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>Tokin' Chews — Creative Breakdown</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+* { box-sizing:border-box }
+body { font:14px/1.5 -apple-system,BlinkMacSystemFont,sans-serif; background:#0a0e1a; color:#e8eaed; margin:0 }
+.wrap { max-width:1400px; margin:0 auto; padding:32px 24px }
+h1 { font-size:32px; margin:0 0 4px; color:#fff }
+h2 { font-size:24px; margin:48px 0 16px; padding-bottom:8px; border-bottom:2px solid #2a2f40; color:#fff }
+h3 { font-size:18px; margin:24px 0 12px; color:#b6bcd1 }
+.sub { color:#8b93a8; margin-bottom:32px }
+.back { display:inline-block; padding:6px 14px; background:#1a1f2e; border:1px solid #2a2f40; border-radius:6px; color:#b6bcd1; text-decoration:none; margin-bottom:24px }
+.back:hover { background:#242938 }
+
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin:20px 0 }
+.kpi { background:#1a1f2e; border:1px solid #2a2f40; border-radius:10px; padding:16px }
+.kpi .l { font-size:11px; color:#8b93a8; text-transform:uppercase; letter-spacing:.5px }
+.kpi .v { font-size:24px; font-weight:700; color:#fff; margin-top:4px }
+.kpi.good .v { color:#22c55e }
+.kpi.bad .v { color:#ef4444 }
+
+.tldr { background:linear-gradient(135deg,#1a2540,#18233a); border:1px solid #2a4065; border-radius:12px; padding:24px; margin:24px 0 }
+.tldr h3 { margin-top:0; color:#7dd3fc }
+.tldr ul { margin:0; padding-left:20px }
+.tldr li { margin-bottom:8px }
+.tldr b { color:#fff }
+
+/* Breakdown cards */
+.bgrid { display:grid; grid-template-columns:1fr; gap:20px }
+.bcard { display:grid; grid-template-columns:380px 1fr; gap:20px; background:#1a1f2e; border:1px solid #2a2f40; border-radius:12px; padding:18px; overflow:hidden }
+.bcard.winner { border-left:4px solid #22c55e }
+.bcard.loser { border-left:4px solid #ef4444 }
+.bimg img { width:100%; border-radius:8px; background:#0a0e1a; max-height:420px; object-fit:cover; object-position:top }
+.no-img { width:100%; height:200px; background:#0a0e1a; display:flex; align-items:center; justify-content:center; border-radius:8px; color:#555 }
+.bmeta { min-width:0 }
+.bname { font-size:13px; color:#8b93a8; margin:6px 0 4px }
+.bheadline { font-size:18px; font-weight:600; color:#fff; margin:2px 0 10px }
+.bbody { font-size:13px; color:#cbd0dd; background:#0f1420; border:1px solid #222838; border-radius:6px; padding:10px; margin-bottom:12px; max-height:150px; overflow-y:auto; white-space:normal }
+.badges { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:4px }
+.badge { font-size:10px; padding:3px 8px; border-radius:4px; font-weight:600; letter-spacing:.3px }
+.b-vid { background:#312e81; color:#a5b4fc }
+.b-off { background:#065f46; color:#6ee7b7 }
+.b-bad { background:#7f1d1d; color:#fca5a5 }
+.b-warn { background:#713f12; color:#fcd34d }
+.metrics { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin:10px 0 14px }
+.metric { background:#0f1420; border:1px solid #222838; padding:6px 8px; border-radius:6px; text-align:center }
+.metric span { display:block; font-size:10px; color:#8b93a8; text-transform:uppercase }
+.metric b { font-size:14px; color:#fff }
+.metric.roas-good b { color:#22c55e }
+.metric.roas-mid b { color:#fbbf24 }
+.metric.roas-bad b { color:#ef4444 }
+.dissect { background:#0f1420; border:1px solid #222838; border-radius:6px; padding:10px 12px }
+.dissect-h { font-weight:600; color:#7dd3fc; margin-bottom:6px; font-size:12px; text-transform:uppercase; letter-spacing:.5px }
+.dissect ul { margin:0; padding-left:18px }
+.dissect li { margin-bottom:4px; font-size:13px; color:#cbd0dd }
+.dissect b { color:#fff }
+.bfoot { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px }
+.pill { font-size:11px; padding:3px 10px; background:#0f1420; border:1px solid #2a2f40; border-radius:12px; color:#8b93a8; text-decoration:none }
+.pill.lp { color:#7dd3fc; border-color:#2a4065 }
+
+/* Tables */
+table { width:100%; border-collapse:collapse; background:#1a1f2e; border-radius:8px; overflow:hidden; margin:12px 0 }
+th, td { padding:10px 12px; text-align:left; border-bottom:1px solid #2a2f40; font-size:13px }
+th { background:#0f1420; color:#8b93a8; font-size:11px; text-transform:uppercase; letter-spacing:.5px; font-weight:600 }
+tr:last-child td { border-bottom:none }
+.roas-good { color:#22c55e }
+.roas-mid { color:#fbbf24 }
+.roas-bad { color:#ef4444 }
+td a { color:#7dd3fc; text-decoration:none }
+
+/* Funnel */
+.funnel { display:flex; flex-direction:column; gap:6px; margin:16px 0 }
+.fstage { display:grid; grid-template-columns:120px 1fr 180px; align-items:center; gap:12px }
+.fbar { background:#0f1420; border-radius:4px; height:32px; position:relative; overflow:hidden }
+.fbar-fill { background:linear-gradient(90deg,#3b82f6,#8b5cf6); height:100%; display:flex; align-items:center; padding-left:10px; color:#fff; font-size:12px; font-weight:600 }
+.fdiag { font-size:11px; color:#8b93a8 }
+.fdiag.warn { color:#fbbf24 }
+.fdiag.crit { color:#ef4444 }
+.fdiag.good { color:#22c55e }
+
+.twocol { display:grid; grid-template-columns:1fr 1fr; gap:24px }
+@media (max-width:900px) { .twocol { grid-template-columns:1fr } .bcard { grid-template-columns:1fr } .metrics { grid-template-columns:repeat(3,1fr) } }
+
+.recs { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0 }
+.rec { background:#1a1f2e; border:1px solid #2a2f40; border-radius:10px; padding:16px; border-left:4px solid #3b82f6 }
+.rec.critical { border-left-color:#ef4444 }
+.rec.high { border-left-color:#f59e0b }
+.rec.med { border-left-color:#3b82f6 }
+.rec .tag { font-size:10px; padding:2px 8px; border-radius:4px; font-weight:600; display:inline-block; margin-bottom:6px }
+.rec.critical .tag { background:#7f1d1d; color:#fca5a5 }
+.rec.high .tag { background:#713f12; color:#fcd34d }
+.rec.med .tag { background:#1e3a8a; color:#93c5fd }
+.rec h4 { margin:4px 0 8px; font-size:15px; color:#fff }
+.rec p { margin:0; font-size:13px; color:#cbd0dd }
+
+.nav { background:#0f1420; border-bottom:1px solid #2a2f40; padding:12px 24px; display:flex; gap:24px; position:sticky; top:0; z-index:10 }
+.nav a { color:#8b93a8; text-decoration:none; font-size:13px; font-weight:500 }
+.nav a:hover { color:#fff }
+.nav .t { color:#fff; font-weight:700; margin-right:auto }
+</style>
+</head><body>
+
+<div class="nav">
+  <span class="t">🕎 Tokin' Chews · Creative Breakdown</span>
+  <a href="#tldr">TL;DR</a>
+  <a href="#winners">Winners</a>
+  <a href="#losers">Losers</a>
+  <a href="#funnel">Funnel</a>
+  <a href="#offers">Offers</a>
+  <a href="#format">Format</a>
+  <a href="#lp">Landing Pages</a>
+  <a href="#recs">Recs</a>
+  <a href="index.html">← Dashboard</a>
+</div>
+
+<div class="wrap">
+  <h1>Creative Breakdown — what worked, what didn't, and why</h1>
+  <div class="sub">150 ads · $35,104 spent · $86,762 revenue · 2.47x ROAS · 886 purchases · 6 weeks (Mar 6 – Apr 14, 2026)</div>
+
+  <div class="kpis">
+    <div class="kpi good"><div class="l">Overall ROAS</div><div class="v">2.47x</div></div>
+    <div class="kpi"><div class="l">Revenue</div><div class="v">$86,762</div></div>
+    <div class="kpi"><div class="l">Spend</div><div class="v">$35,104</div></div>
+    <div class="kpi"><div class="l">Purchases</div><div class="v">886</div></div>
+    <div class="kpi"><div class="l">CPP</div><div class="v">$40</div></div>
+    <div class="kpi good"><div class="l">Video ROAS lift</div><div class="v">+31%</div></div>
+  </div>
+
+  <div class="tldr" id="tldr">
+    <h3>🎯 The three things that moved the needle</h3>
+    <ul>
+      <li><b>Video crushed image.</b> 11 video ads returned 3.12x ROAS vs 2.38x for 139 image ads (+31% lift). CTR was 2.08x higher (4.29% vs 2.06%). Every one of them ran to the Advent Calendar LP.</li>
+      <li><b>Passover narrative + single-SKU story = the unlock.</b> The top 3 revenue-generating ads all used cultural humor ("bubbe didn't have these", "reclining to the left like royalty") paired with one specific product's story and Mehadrin Kosher certification. Broad/LLA audiences + Passover seasonality carried $12,000+ in revenue across three creatives.</li>
+      <li><b>The Advent Calendar (Miracle Box) is your flagship LP.</b> 11 ads × 3.12x ROAS × 115 purchases. Every other LP either hemorrhaged spend or got no traffic. The bundle gift-angle is where your funnel converts.</li>
+    </ul>
+  </div>
+
+  <div class="tldr" style="border-color:#7f1d1d;background:linear-gradient(135deg,#2a1419,#1f0f13)">
+    <h3 style="color:#fca5a5">🔥 What's actively costing you money</h3>
+    <ul>
+      <li><b>62 ads on a suspended account.</b> TC2 is Meta-disabled (Ads Integrity Policy). Every ad on it is frozen — that's 41% of your library parked on a dead account holding $32,193 of lifetime spend.</li>
+      <li><b>23 disapproved creatives.</b> Cannabis/THC compliance language is tripping Meta's review. Spend burns during review even if the ad never delivers.</li>
+      <li><b>4/20 ads launched too late.</b> "30% Off The Holiest 4/20 Sale" ads were disapproved/underperformed — Meta throttles cannabis-adjacent during holiday spikes. Launch 14+ days early next cycle.</li>
+      <li><b>Discount-led hooks (30%, 42% off) lost to story-led hooks.</b> 42% OFF cohort: 1.67x ROAS. No-offer storytelling cohort: 2.40x ROAS. Price isn't the lever for this brand.</li>
+    </ul>
+  </div>
+
+  <h2 id="winners">🏆 Top winners — dissected</h2>
+  <p class="sub">Ranked by revenue contribution. Each card shows the actual creative, metrics, and pattern-matched explanation of why it outperformed.</p>
+  <div class="bgrid">
+    
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246029339430460_a4455ff79ea6.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">Not everything makes the passover list v1</div>
+        <div class="bheadline">“The fifth cup hit different.”</div>
+        <div class="bbody">Your bubbe didn&#x27;t have these at her seder. But she would&#x27;ve wanted to. <br><br>Schnozberry is a deep, jammy blackberry gummy — tart-sweet, sugar-coated, and certified Mehadrin Kosher for Passover. No chametz. No kitniyot. No compromises. 10mg per piece. Vegan. Built for the table, approved for the holiday.<br><br>Free shipping on orders $100+ 🍇</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$6,420</b></div>
+      <div class="metric"><span>Revenue</span><b>$13,479</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>2.10x</b></div>
+      <div class="metric"><span>Purchases</span><b>148</b></div>
+      <div class="metric"><span>CPP</span><b>$43</b></div>
+      <div class="metric"><span>CTR</span><b>1.61%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🌿 <b>Dietary specificity</b> pre-qualifies — strict compliance language filters for buyers who self-identify.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Passover</span>
+          <span class="pill">Broad 03/06/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246513948590460_11ce3f612643.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-bad">🚫 DISAPPROVED</span></div>
+        <div class="bname">Passover, Reimagined v1</div>
+        <div class="bheadline">“Last year&#x27;s favorite. This year&#x27;s tradition.”</div>
+        <div class="bbody">Seder Citrus sold out last Passover. Now it&#x27;s back — and stronger. Bright blood orange with natural acidity and a clean, juicy finish. Sugar-coated, perfectly chewy, and Mehadrin certified under the strictest Passover standards. No chametz. No kitniyot. Vegan.<br><br>The seder plate got an upgrade. 🍊<br><br>Free shipping on orders $100+</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$3,315</b></div>
+      <div class="metric"><span>Revenue</span><b>$8,481</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>2.56x</b></div>
+      <div class="metric"><span>Purchases</span><b>89</b></div>
+      <div class="metric"><span>CPP</span><b>$37</b></div>
+      <div class="metric"><span>CTR</span><b>2.63%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🌿 <b>Dietary specificity</b> pre-qualifies — strict compliance language filters for buyers who self-identify.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Passover</span>
+          <span class="pill">LLA 1% - Purchase - 180 Days 03/16/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246049057690460_865ae3059d90.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"></div>
+        <div class="bname">Eight Nights. Eight Gifts. One Miracle Box.</div>
+        <div class="bheadline">“The Passover Gift That Slaps”</div>
+        <div class="bbody">The host gift that actually gets talked about at the table.<br><br>🎁 8 mystery drawers packed with over $180 in goodies<br>✡️ Mehadrin Kosher for Passover certified<br>🕎 Treats, accessories, tools &amp; Tokin&#x27; Jew favorites<br>🚚 Free shipping on orders $100+<br><br>Whether you&#x27;re hosting, guesting, or just reclining to the left like royalty — the Puff Puff Passover Advent Calendar makes every night of the holiday hit different.<br><br>One box. Eight reasons nobody&#x27;s asking &quot;when do we eat?&quot; anymore.</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$2,424</b></div>
+      <div class="metric"><span>Revenue</span><b>$5,987</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>2.47x</b></div>
+      <div class="metric"><span>Purchases</span><b>56</b></div>
+      <div class="metric"><span>CPP</span><b>$43</b></div>
+      <div class="metric"><span>CTR</span><b>1.78%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>😂 <b>Gen-Z vernacular</b> mixed with tradition — generates share-worthy contrast (core brand voice).</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Advent Calendar</span>
+          <span class="pill">Stacked LLA 1% 03/06/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246028259190460_b4e2168c2c62.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-bad">🚫 DISAPPROVED</span></div>
+        <div class="bname">Your 8 day elevated ritual V1</div>
+        <div class="bheadline">“Two flavors. One holy night.”</div>
+        <div class="bbody">The Passover lineup is here. Schnozberry brings deep, jammy blackberry with a tart-sweet finish. Seder Citrus hits with bright blood orange and clean acidity. Both sugar-coated, vegan, and Mehadrin certified under the strictest holiday standards. No chametz. No kitniyot. No compromises.<br><br>🍇 Schnozberry  🍊 Seder Citrus<br><br>Recline accordingly.<br><br>Free shipping on orders $100+</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$1,958</b></div>
+      <div class="metric"><span>Revenue</span><b>$6,200</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>3.17x</b></div>
+      <div class="metric"><span>Purchases</span><b>50</b></div>
+      <div class="metric"><span>CPP</span><b>$39</b></div>
+      <div class="metric"><span>CTR</span><b>1.37%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🌿 <b>Dietary specificity</b> pre-qualifies — strict compliance language filters for buyers who self-identify.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Passover</span>
+          <span class="pill">Broad 03/06/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246730660090460_d9c88496034f.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-vid">🎥 VIDEO</span><span class="badge b-off">FREE SHIP</span><span class="badge b-off">FREE GIFT</span><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">PassoverAdvent_3_V2</div>
+        <div class="bheadline">“The Passover Gift That Slaps”</div>
+        <div class="bbody">The host gift that actually gets talked about at the table.<br><br>🎁 8 mystery drawers packed with over $180 in goodies<br>✡️ Mehadrin Kosher for Passover certified<br>🕎 Treats, accessories, tools &amp; Tokin&#x27; Jew favorites<br>🚚 Free shipping on orders $100+<br><br>Whether you&#x27;re hosting, guesting, or just reclining to the left like royalty — the Puff Puff Passover Advent Calendar makes every night of the holiday hit different.<br><br>One box. Eight reasons nobody&#x27;s asking &quot;when do we eat?&quot; anymore.</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$1,953</b></div>
+      <div class="metric"><span>Revenue</span><b>$6,818</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>3.49x</b></div>
+      <div class="metric"><span>Purchases</span><b>56</b></div>
+      <div class="metric"><span>CPP</span><b>$35</b></div>
+      <div class="metric"><span>CTR</span><b>5.05%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>😂 <b>Gen-Z vernacular</b> mixed with tradition — generates share-worthy contrast (core brand voice).</li><li>🎥 <b>Video format</b> — cohort averages 3.12x ROAS vs 2.38x for image (+31%).</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Round 11</span>
+          <span class="pill">Stacked LLA 1% - 180 Days 03/20/26</span>
+          <a class="pill lp" href="https://tokinjewflower.com/products/advent-calendar" target="_blank">🎯 https://tokinjewflower.com/products/advent-calendar</a>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246622365340460_8f668f4a2be9.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-bad">🚫 DISAPPROVED</span></div>
+        <div class="bname">Puff Puff Passover Ad</div>
+        <div class="bheadline">“Two flavors. One holy night.”</div>
+        <div class="bbody">The Passover lineup is here. Schnozberry brings deep, jammy blackberry with a tart-sweet finish. Seder Citrus hits with bright blood orange and clean acidity. Both sugar-coated, vegan, and Mehadrin certified under the strictest holiday standards. No chametz. No kitniyot. No compromises.<br><br>🍇 Schnozberry  🍊 Seder Citrus<br><br>Recline accordingly.<br><br>Free shipping on orders $100+</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$1,470</b></div>
+      <div class="metric"><span>Revenue</span><b>$4,332</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>2.95x</b></div>
+      <div class="metric"><span>Purchases</span><b>48</b></div>
+      <div class="metric"><span>CPP</span><b>$31</b></div>
+      <div class="metric"><span>CTR</span><b>2.31%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🌿 <b>Dietary specificity</b> pre-qualifies — strict compliance language filters for buyers who self-identify.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Passover 2.0</span>
+          <span class="pill">Stacked LLA 1% - 180 Days 03/18/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246028153090460_2e7fc4dbd62e.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">This Passover will be Different v1</div>
+        <div class="bheadline">“Two flavors. One holy night.”</div>
+        <div class="bbody">The Passover lineup is here. Schnozberry brings deep, jammy blackberry with a tart-sweet finish. Seder Citrus hits with bright blood orange and clean acidity. Both sugar-coated, vegan, and Mehadrin certified under the strictest holiday standards. No chametz. No kitniyot. No compromises.<br><br>🍇 Schnozberry  🍊 Seder Citrus<br><br>Recline accordingly.<br><br>Free shipping on orders $100+</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$1,163</b></div>
+      <div class="metric"><span>Revenue</span><b>$3,247</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>2.79x</b></div>
+      <div class="metric"><span>Purchases</span><b>33</b></div>
+      <div class="metric"><span>CPP</span><b>$35</b></div>
+      <div class="metric"><span>CTR</span><b>2.48%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🌿 <b>Dietary specificity</b> pre-qualifies — strict compliance language filters for buyers who self-identify.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Passover</span>
+          <span class="pill">Broad 03/06/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246029104190460_4309130fbce6.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">Spot the certified one v1</div>
+        <div class="bheadline">“The fifth cup hit different.”</div>
+        <div class="bbody">Your bubbe didn&#x27;t have these at her seder. But she would&#x27;ve wanted to. <br><br>Schnozberry is a deep, jammy blackberry gummy — tart-sweet, sugar-coated, and certified Mehadrin Kosher for Passover. No chametz. No kitniyot. No compromises. 10mg per piece. Vegan. Built for the table, approved for the holiday.<br><br>Free shipping on orders $100+ 🍇</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$1,152</b></div>
+      <div class="metric"><span>Revenue</span><b>$2,377</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>2.06x</b></div>
+      <div class="metric"><span>Purchases</span><b>26</b></div>
+      <div class="metric"><span>CPP</span><b>$44</b></div>
+      <div class="metric"><span>CTR</span><b>0.96%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🌿 <b>Dietary specificity</b> pre-qualifies — strict compliance language filters for buyers who self-identify.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Passover</span>
+          <span class="pill">Broad 03/06/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246950454420460_2b15bc475efa.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-vid">🎥 VIDEO</span><span class="badge b-off">FREE SHIP</span><span class="badge b-off">FREE GIFT</span><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">AdventCalInWarehouse_1_V1</div>
+        <div class="bheadline">“The Passover Gift That Slaps”</div>
+        <div class="bbody">The host gift that actually gets talked about at the table.<br><br>🎁 8 mystery drawers packed with over $180 in goodies<br>✡️ Mehadrin Kosher for Passover certified<br>🕎 Treats, accessories, tools &amp; Tokin&#x27; Jew favorites<br>🚚 Free shipping on orders $100+<br><br>Whether you&#x27;re hosting, guesting, or just reclining to the left like royalty — the Puff Puff Passover Advent Calendar makes every night of the holiday hit different.<br><br>One box. Eight reasons nobody&#x27;s asking &quot;when do we eat?&quot; anymore.</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$982</b></div>
+      <div class="metric"><span>Revenue</span><b>$2,874</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>2.93x</b></div>
+      <div class="metric"><span>Purchases</span><b>26</b></div>
+      <div class="metric"><span>CPP</span><b>$38</b></div>
+      <div class="metric"><span>CTR</span><b>3.61%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>😂 <b>Gen-Z vernacular</b> mixed with tradition — generates share-worthy contrast (core brand voice).</li><li>🎥 <b>Video format</b> — cohort averages 3.12x ROAS vs 2.38x for image (+31%).</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Advent Calendar</span>
+          <span class="pill">Stacked LLA 1% 03/06/26</span>
+          <a class="pill lp" href="https://tokinjewflower.com/products/advent-calendar" target="_blank">🎯 https://tokinjewflower.com/products/advent-calendar</a>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246950499920460_b1e2c129e812.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-vid">🎥 VIDEO</span><span class="badge b-off">FREE SHIP</span><span class="badge b-off">FREE GIFT</span><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">AdventCalInWarehouse_2_V1</div>
+        <div class="bheadline">“The Passover Gift That Slaps”</div>
+        <div class="bbody">The host gift that actually gets talked about at the table.<br><br>🎁 8 mystery drawers packed with over $180 in goodies<br>✡️ Mehadrin Kosher for Passover certified<br>🕎 Treats, accessories, tools &amp; Tokin&#x27; Jew favorites<br>🚚 Free shipping on orders $100+<br><br>Whether you&#x27;re hosting, guesting, or just reclining to the left like royalty — the Puff Puff Passover Advent Calendar makes every night of the holiday hit different.<br><br>One box. Eight reasons nobody&#x27;s asking &quot;when do we eat?&quot; anymore.</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$841</b></div>
+      <div class="metric"><span>Revenue</span><b>$2,160</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>2.57x</b></div>
+      <div class="metric"><span>Purchases</span><b>20</b></div>
+      <div class="metric"><span>CPP</span><b>$42</b></div>
+      <div class="metric"><span>CTR</span><b>3.68%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>😂 <b>Gen-Z vernacular</b> mixed with tradition — generates share-worthy contrast (core brand voice).</li><li>🎥 <b>Video format</b> — cohort averages 3.12x ROAS vs 2.38x for image (+31%).</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Advent Calendar</span>
+          <span class="pill">Stacked LLA 1% 03/06/26</span>
+          <a class="pill lp" href="https://tokinjewflower.com/products/advent-calendar" target="_blank">🎯 https://tokinjewflower.com/products/advent-calendar</a>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <h2 id="scalers">📈 Hidden scalers (best ROAS, underspent)</h2>
+  <p class="sub">These ads returned 3.4x+ ROAS on small budgets. Feed them.</p>
+  <div class="bgrid">
+    
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246028520500460_5eda673c07e4.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-bad">🚫 DISAPPROVED</span></div>
+        <div class="bname">Passover is Calling</div>
+        <div class="bheadline">“Last year&#x27;s favorite. This year&#x27;s tradition.”</div>
+        <div class="bbody">Seder Citrus sold out last Passover. Now it&#x27;s back — and stronger. Bright blood orange with natural acidity and a clean, juicy finish. Sugar-coated, perfectly chewy, and Mehadrin certified under the strictest Passover standards. No chametz. No kitniyot. Vegan.<br><br>The seder plate got an upgrade. 🍊<br><br>Free shipping on orders $100+</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$642</b></div>
+      <div class="metric"><span>Revenue</span><b>$2,452</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>3.82x</b></div>
+      <div class="metric"><span>Purchases</span><b>24</b></div>
+      <div class="metric"><span>CPP</span><b>$27</b></div>
+      <div class="metric"><span>CTR</span><b>3.80%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🌿 <b>Dietary specificity</b> pre-qualifies — strict compliance language filters for buyers who self-identify.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Passover</span>
+          <span class="pill">Broad 03/06/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246513948430460_fa3e077c04cf.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-off">FREE SHIP</span><span class="badge b-off">FREE GIFT</span><span class="badge b-bad">🚫 DISAPPROVED</span></div>
+        <div class="bname">TJ_MetaAds_KforP_1-15</div>
+        <div class="bheadline">“Last year&#x27;s favorite. This year&#x27;s tradition.”</div>
+        <div class="bbody">Seder Citrus sold out last Passover. Now it&#x27;s back — and stronger. Bright blood orange with natural acidity and a clean, juicy finish. Sugar-coated, perfectly chewy, and Mehadrin certified under the strictest Passover standards. No chametz. No kitniyot. Vegan.<br><br>The seder plate got an upgrade. 🍊<br><br>Free shipping on orders $100+</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$266</b></div>
+      <div class="metric"><span>Revenue</span><b>$1,008</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>3.80x</b></div>
+      <div class="metric"><span>Purchases</span><b>9</b></div>
+      <div class="metric"><span>CPP</span><b>$30</b></div>
+      <div class="metric"><span>CTR</span><b>3.11%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🌿 <b>Dietary specificity</b> pre-qualifies — strict compliance language filters for buyers who self-identify.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Passover</span>
+          <span class="pill">LLA 1% - Purchase - 180 Days 03/16/26</span>
+          <a class="pill lp" href="https://tokinjewflower.com/products/blood-orange-kosher-for-passover" target="_blank">🎯 https://tokinjewflower.com/products/blood-orange-kosher-for-</a>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120247817318340460_9044ff58ba53.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">TJ_420Ads_2026_v1-35</div>
+        <div class="bheadline">“30% Off The Holiest 4/20 Sale”</div>
+        <div class="bbody">Mazel tov — 4/20 is officially kosher. 🕎🌿<br><br>We blessed the prices, trimmed the fat, and called the rabbi — 30% off our premium botanicals. California-grown, hand-packed, certified kosher, and rolled with intention.<br><br>This year, get chai with the chosen ones.</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$312</b></div>
+      <div class="metric"><span>Revenue</span><b>$1,094</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>3.51x</b></div>
+      <div class="metric"><span>Purchases</span><b>14</b></div>
+      <div class="metric"><span>CPP</span><b>$22</b></div>
+      <div class="metric"><span>CTR</span><b>2.82%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] TJ 420</span>
+          <span class="pill">Stacked LLA 1% - 180 Days 03/20/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard winner">
+      <div class="bimg"><img loading="lazy" src="fullres/120246730660090460_d9c88496034f.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-vid">🎥 VIDEO</span><span class="badge b-off">FREE SHIP</span><span class="badge b-off">FREE GIFT</span><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">PassoverAdvent_3_V2</div>
+        <div class="bheadline">“The Passover Gift That Slaps”</div>
+        <div class="bbody">The host gift that actually gets talked about at the table.<br><br>🎁 8 mystery drawers packed with over $180 in goodies<br>✡️ Mehadrin Kosher for Passover certified<br>🕎 Treats, accessories, tools &amp; Tokin&#x27; Jew favorites<br>🚚 Free shipping on orders $100+<br><br>Whether you&#x27;re hosting, guesting, or just reclining to the left like royalty — the Puff Puff Passover Advent Calendar makes every night of the holiday hit different.<br><br>One box. Eight reasons nobody&#x27;s asking &quot;when do we eat?&quot; anymore.</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$1,953</b></div>
+      <div class="metric"><span>Revenue</span><b>$6,818</b></div>
+      <div class="metric roas-good"><span>ROAS</span><b>3.49x</b></div>
+      <div class="metric"><span>Purchases</span><b>56</b></div>
+      <div class="metric"><span>CPP</span><b>$35</b></div>
+      <div class="metric"><span>CTR</span><b>5.05%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this worked:</div>
+          <ul><li>🕎 <b>Kosher certification</b> anchors trust for the Jewish audience — explicit Mehadrin/Passover compliance.</li><li>🍷 <b>Seasonal hook</b> — Passover narrative creates urgency + cultural resonance.</li><li>🚚 <b>Free shipping $100+</b> is in-copy — lifts AOV + removes friction at checkout.</li><li>🎨 <b>Emoji accent</b> breaks up dense body copy — improves scannability on mobile feeds.</li><li>😂 <b>Gen-Z vernacular</b> mixed with tradition — generates share-worthy contrast (core brand voice).</li><li>🎥 <b>Video format</b> — cohort averages 3.12x ROAS vs 2.38x for image (+31%).</li><li>🎯 <b>Single-SKU focus</b> — body copy sells ONE product's story, not a catalog dump.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Round 11</span>
+          <span class="pill">Stacked LLA 1% - 180 Days 03/20/26</span>
+          <a class="pill lp" href="https://tokinjewflower.com/products/advent-calendar" target="_blank">🎯 https://tokinjewflower.com/products/advent-calendar</a>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <h2 id="losers">💀 Top losers — why they failed</h2>
+  <p class="sub">Worst ROAS × spend combinations. Diagnosing root cause (not just "it didn't work").</p>
+  <div class="bgrid">
+    
+    <div class="bcard loser">
+      <div class="bimg"><img loading="lazy" src="fullres/120246513948400460_e88a8554debe.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-off">FREE SHIP</span><span class="badge b-off">FREE GIFT</span><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">TJ_MetaAds_KforP_1-13</div>
+        <div class="bheadline">“Last year&#x27;s favorite. This year&#x27;s tradition.”</div>
+        <div class="bbody">Seder Citrus sold out last Passover. Now it&#x27;s back — and stronger. Bright blood orange with natural acidity and a clean, juicy finish. Sugar-coated, perfectly chewy, and Mehadrin certified under the strictest Passover standards. No chametz. No kitniyot. Vegan.<br><br>The seder plate got an upgrade. 🍊<br><br>Free shipping on orders $100+</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$205</b></div>
+      <div class="metric"><span>Revenue</span><b>$151</b></div>
+      <div class="metric roas-bad"><span>ROAS</span><b>0.74x</b></div>
+      <div class="metric"><span>Purchases</span><b>2</b></div>
+      <div class="metric"><span>CPP</span><b>$102</b></div>
+      <div class="metric"><span>CTR</span><b>3.87%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this failed:</div>
+          <ul><li>⛔ <b>On suspended TC2 account</b> — delivery halted by Ads Integrity Policy (62 ads affected).</li><li>💸 <b>$205 spent, 0.74x ROAS</b> — should have been killed at $61 threshold.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Passover</span>
+          <span class="pill">LLA 1% - Purchase - 180 Days 03/16/26</span>
+          <a class="pill lp" href="https://tokinjewflower.com/products/blood-orange-kosher-for-passover" target="_blank">🎯 https://tokinjewflower.com/products/blood-orange-kosher-for-</a>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard loser">
+      <div class="bimg"><img loading="lazy" src="fullres/120247816503940460_5871d34cf242.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">TJ_420Ads_2026_v1-24</div>
+        <div class="bheadline">“30% Off The Holiest 4/20 Sale”</div>
+        <div class="bbody">Mazel tov — 4/20 is officially kosher. 🕎🌿<br><br>We blessed the prices, trimmed the fat, and called the rabbi — 30% off our premium botanicals. California-grown, hand-packed, certified kosher, and rolled with intention.<br><br>This year, get chai with the chosen ones.</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$134</b></div>
+      <div class="metric"><span>Revenue</span><b>$46</b></div>
+      <div class="metric roas-bad"><span>ROAS</span><b>0.34x</b></div>
+      <div class="metric"><span>Purchases</span><b>1</b></div>
+      <div class="metric"><span>CPP</span><b>$134</b></div>
+      <div class="metric"><span>CTR</span><b>7.01%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this failed:</div>
+          <ul><li>📉 <b>Discount-led open</b> — leads with price, not identity. 30%-off cohort delivered 1.67x ROAS vs 2.40x for no-offer ads.</li><li>🚬 <b>4/20 timing</b> — launched late (Apr 7+), Meta likely throttled cannabis-adjacent creative before learning phase ended.</li><li>⛔ <b>On suspended TC2 account</b> — delivery halted by Ads Integrity Policy (62 ads affected).</li><li>💸 <b>$134 spent, 0.34x ROAS</b> — should have been killed at $40 threshold.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] TJ 420</span>
+          <span class="pill">Stacked LLA 1% - 180 Days 03/20/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard loser">
+      <div class="bimg"><img loading="lazy" src="fullres/120246049015530460_b0b2ec06f58d.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">An Exodus From Egypt I Can Get Behind</div>
+        <div class="bheadline">“The Passover Gift That Slaps”</div>
+        <div class="bbody">The host gift that actually gets talked about at the table.<br><br>🎁 8 mystery drawers packed with over $180 in goodies<br>✡️ Mehadrin Kosher for Passover certified<br>🕎 Treats, accessories, tools &amp; Tokin&#x27; Jew favorites<br>🚚 Free shipping on orders $100+<br><br>Whether you&#x27;re hosting, guesting, or just reclining to the left like royalty — the Puff Puff Passover Advent Calendar makes every night of the holiday hit different.<br><br>One box. Eight reasons nobody&#x27;s asking &quot;when do we eat?&quot; anymore.</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$134</b></div>
+      <div class="metric"><span>Revenue</span><b>$0</b></div>
+      <div class="metric roas-bad"><span>ROAS</span><b>0.00x</b></div>
+      <div class="metric"><span>Purchases</span><b>0</b></div>
+      <div class="metric"><span>CPP</span><b>$0</b></div>
+      <div class="metric"><span>CTR</span><b>1.21%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this failed:</div>
+          <ul><li>⛔ <b>On suspended TC2 account</b> — delivery halted by Ads Integrity Policy (62 ads affected).</li><li>💸 <b>$134 spent, 0.00x ROAS</b> — should have been killed at $40 threshold.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Advent Calendar</span>
+          <span class="pill">Stacked LLA 1% 03/06/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard loser">
+      <div class="bimg"><img loading="lazy" src="fullres/120247816969280460_95a1020228e8.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">TJ_420Ads_2026_v1-31</div>
+        <div class="bheadline">“30% Off The Holiest 4/20 Sale”</div>
+        <div class="bbody">Mazel tov — 4/20 is officially kosher. 🕎🌿<br><br>We blessed the prices, trimmed the fat, and called the rabbi — 30% off our premium botanicals. California-grown, hand-packed, certified kosher, and rolled with intention.<br><br>This year, get chai with the chosen ones.</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$84</b></div>
+      <div class="metric"><span>Revenue</span><b>$0</b></div>
+      <div class="metric roas-bad"><span>ROAS</span><b>0.00x</b></div>
+      <div class="metric"><span>Purchases</span><b>0</b></div>
+      <div class="metric"><span>CPP</span><b>$0</b></div>
+      <div class="metric"><span>CTR</span><b>2.33%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this failed:</div>
+          <ul><li>📉 <b>Discount-led open</b> — leads with price, not identity. 30%-off cohort delivered 1.67x ROAS vs 2.40x for no-offer ads.</li><li>🚬 <b>4/20 timing</b> — launched late (Apr 7+), Meta likely throttled cannabis-adjacent creative before learning phase ended.</li><li>⛔ <b>On suspended TC2 account</b> — delivery halted by Ads Integrity Policy (62 ads affected).</li><li>💸 <b>$84 spent, 0.00x ROAS</b> — should have been killed at $25 threshold.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] TJ 420</span>
+          <span class="pill">Stacked LLA 1% - 180 Days 03/20/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard loser">
+      <div class="bimg"><img loading="lazy" src="fullres/120246049130780460_b4e26c949ead.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">Passover x High Holiday</div>
+        <div class="bheadline">“The Passover Gift That Slaps”</div>
+        <div class="bbody">The host gift that actually gets talked about at the table.<br><br>🎁 8 mystery drawers packed with over $180 in goodies<br>✡️ Mehadrin Kosher for Passover certified<br>🕎 Treats, accessories, tools &amp; Tokin&#x27; Jew favorites<br>🚚 Free shipping on orders $100+<br><br>Whether you&#x27;re hosting, guesting, or just reclining to the left like royalty — the Puff Puff Passover Advent Calendar makes every night of the holiday hit different.<br><br>One box. Eight reasons nobody&#x27;s asking &quot;when do we eat?&quot; anymore.</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$82</b></div>
+      <div class="metric"><span>Revenue</span><b>$53</b></div>
+      <div class="metric roas-bad"><span>ROAS</span><b>0.64x</b></div>
+      <div class="metric"><span>Purchases</span><b>1</b></div>
+      <div class="metric"><span>CPP</span><b>$82</b></div>
+      <div class="metric"><span>CTR</span><b>3.39%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this failed:</div>
+          <ul><li>⛔ <b>On suspended TC2 account</b> — delivery halted by Ads Integrity Policy (62 ads affected).</li><li>💸 <b>$82 spent, 0.64x ROAS</b> — should have been killed at $25 threshold.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] Advent Calendar</span>
+          <span class="pill">Stacked LLA 1% 03/06/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bcard loser">
+      <div class="bimg"><img loading="lazy" src="fullres/120247817198860460_0f8ec43020d6.jpg" alt=""></div>
+      <div class="bmeta">
+        <div class="badges"><span class="badge b-warn">⛔ SUSPENDED ACCT</span></div>
+        <div class="bname">TJ_420Ads_2026_v1-32</div>
+        <div class="bheadline">“30% Off The Holiest 4/20 Sale”</div>
+        <div class="bbody">Mazel tov — 4/20 is officially kosher. 🕎🌿<br><br>We blessed the prices, trimmed the fat, and called the rabbi — 30% off our premium botanicals. California-grown, hand-packed, certified kosher, and rolled with intention.<br><br>This year, get chai with the chosen ones.</div>
+        <div class="metrics">
+      <div class="metric"><span>Spend</span><b>$81</b></div>
+      <div class="metric"><span>Revenue</span><b>$0</b></div>
+      <div class="metric roas-bad"><span>ROAS</span><b>0.00x</b></div>
+      <div class="metric"><span>Purchases</span><b>0</b></div>
+      <div class="metric"><span>CPP</span><b>$0</b></div>
+      <div class="metric"><span>CTR</span><b>1.17%</b></div>
+    </div>
+        <div class="dissect">
+          <div class="dissect-h">Why this failed:</div>
+          <ul><li>📉 <b>Discount-led open</b> — leads with price, not identity. 30%-off cohort delivered 1.67x ROAS vs 2.40x for no-offer ads.</li><li>🚬 <b>4/20 timing</b> — launched late (Apr 7+), Meta likely throttled cannabis-adjacent creative before learning phase ended.</li><li>⛔ <b>On suspended TC2 account</b> — delivery halted by Ads Integrity Policy (62 ads affected).</li><li>💸 <b>$81 spent, 0.00x ROAS</b> — should have been killed at $24 threshold.</li></ul>
+        </div>
+        <div class="bfoot">
+          <span class="pill">UNRES [Prospecting] TJ 420</span>
+          <span class="pill">Stacked LLA 1% - 180 Days 03/20/26</span>
+          
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <h2 id="funnel">🔻 Full-funnel breakdown</h2>
+  <p class="sub">Where the 1.42M impressions go, and where they leak.</p>
+  <div class="funnel">
+    <div class="fstage">
+      <b>Impressions</b>
+      <div class="fbar"><div class="fbar-fill" style="width:100%">1,423,846</div></div>
+      <div class="fdiag">Baseline</div>
+    </div>
+    <div class="fstage">
+      <b>Link clicks</b>
+      <div class="fbar"><div class="fbar-fill" style="width:23.1%;max-width:100%">32,880 (2.31%)</div></div>
+      <div class="fdiag good">✅ above 2% target</div>
+    </div>
+    <div class="fstage">
+      <b>LP views</b>
+      <div class="fbar"><div class="fbar-fill" style="width:46.1%">15,150 (46% of clicks)</div></div>
+      <div class="fdiag crit">🚨 54% of clicks never reach LP — tracking or slow mobile load</div>
+    </div>
+    <div class="fstage">
+      <b>Add to cart</b>
+      <div class="fbar"><div class="fbar-fill" style="width:21.6%">3,265 (22% of LPV)</div></div>
+      <div class="fdiag warn">⚠️ LP not closing</div>
+    </div>
+    <div class="fstage">
+      <b>Initiate checkout</b>
+      <div class="fbar"><div class="fbar-fill" style="width:65.7%">2,145 (66% of ATC)</div></div>
+      <div class="fdiag good">✅ ATC→IC healthy</div>
+    </div>
+    <div class="fstage">
+      <b>Purchase</b>
+      <div class="fbar"><div class="fbar-fill" style="width:41.3%;background:linear-gradient(90deg,#22c55e,#16a34a)">886 (41% of IC)</div></div>
+      <div class="fdiag good">✅ strong checkout → purchase</div>
+    </div>
+  </div>
+  <p class="sub" style="margin-top:12px"><b>The big leak is click → LP view.</b> 17,730 clicks pay for nothing — they abandon before the LP loads, or Meta pixel misfires. Audit mobile page-weight (tokinjewflower.com) and verify GA4 / pixel deduping.</p>
+
+  <h2 id="offers">💰 Offer / promo performance</h2>
+  <table>
+    <tr><th>Offer</th><th>Ads</th><th>Spend</th><th>Revenue</th><th>ROAS</th><th>CTR</th><th>CPP</th></tr>
+    
+  <tr>
+    <td><b>(no offer)</b></td>
+    <td>77</td>
+    <td>$26,908</td>
+    <td>$64,521</td>
+    <td class="roas-mid"><b>2.40x</b></td>
+    <td>1.98%</td>
+    <td>$40</td>
+  </tr>
+  <tr>
+    <td><b>FREE SHIP</b></td>
+    <td>25</td>
+    <td>$5,285</td>
+    <td>$15,344</td>
+    <td class="roas-good"><b>2.90x</b></td>
+    <td>4.13%</td>
+    <td>$40</td>
+  </tr>
+  <tr>
+    <td><b>30% OFF</b></td>
+    <td>18</td>
+    <td>$2,261</td>
+    <td>$5,815</td>
+    <td class="roas-good"><b>2.57x</b></td>
+    <td>2.66%</td>
+    <td>$32</td>
+  </tr>
+  <tr>
+    <td><b>42% OFF</b></td>
+    <td>30</td>
+    <td>$649</td>
+    <td>$1,082</td>
+    <td class="roas-mid"><b>1.67x</b></td>
+    <td>2.71%</td>
+    <td>$65</td>
+  </tr>
+  </table>
+  <p class="sub"><b>Counterintuitive finding:</b> Free-shipping / free-gift language in-body (not as a discount) outperformed every % discount. The "no offer" cohort also beat 42% OFF. Lesson: this audience buys for <i>story and identity</i>, not price.</p>
+
+  <h2 id="format">🎥 Format comparison</h2>
+  <table>
+    <tr><th>Format</th><th>Ads</th><th>Spend</th><th>Revenue</th><th>ROAS</th><th>CTR</th><th>CPM</th><th>CPP</th></tr>
+    <tr><td><b>Image</b></td><td>139</td><td>$30,745</td><td>$73,150</td><td class="roas-mid"><b>2.38x</b></td><td>2.06%</td><td>$24.25</td><td>$40</td></tr>
+    <tr><td><b>Video</b></td><td>11</td><td>$4,359</td><td>$13,612</td><td class="roas-good"><b>3.12x</b></td><td>4.29%</td><td>$27.90</td><td>$38</td></tr>
+  </table>
+  <p class="sub">Only 11 videos in the whole library. Avg video hook-rate: 35.4%, hold: 37.5%. <b>Doubling video output is the single highest-leverage next move.</b></p>
+
+  <h2 id="lp">🎯 Landing-page performance</h2>
+  <table>
+    <tr><th>Landing page</th><th>Ads</th><th>Spend</th><th>Revenue</th><th>ROAS</th><th>Purch</th><th>CPP</th></tr>
+    
+  <tr>
+    <td><a href="https://tokinjewflower.com/products/advent-calendar" target="_blank">/products/advent-calendar</a></td>
+    <td>11</td>
+    <td>$4,359</td>
+    <td>$13,612</td>
+    <td class="roas-good"><b>3.12x</b></td>
+    <td>115</td>
+    <td>$38</td>
+  </tr>
+  <tr>
+    <td><a href="https://tokinjewflower.com/products/blood-orange-kosher-for-passover" target="_blank">/products/blood-orange-kosher-for-passover</a></td>
+    <td>14</td>
+    <td>$926</td>
+    <td>$1,732</td>
+    <td class="roas-mid"><b>1.87x</b></td>
+    <td>16</td>
+    <td>$58</td>
+  </tr>
+  <tr>
+    <td><a href="https://tokinjewflower.com/products/schnozberry-1" target="_blank">/products/schnozberry-1</a></td>
+    <td>7</td>
+    <td>$1</td>
+    <td>$0</td>
+    <td class="roas-bad"><b>0.00x</b></td>
+    <td>0</td>
+    <td>$0</td>
+  </tr>
+  <tr>
+    <td><a href="https://tokinjewflower.com/collections/tokin-jew-gear-paraphernila" target="_blank">/collections/tokin-jew-gear-paraphernila</a></td>
+    <td>20</td>
+    <td>$0</td>
+    <td>$0</td>
+    <td class="roas-bad"><b>0.00x</b></td>
+    <td>0</td>
+    <td>$0</td>
+  </tr>
+  </table>
+  <p class="sub"><b>Advent Calendar / Miracle Box is the only LP doing real work.</b> Blood Orange and Schnozberry single-product LPs underperformed despite strong creatives — possible LP issue (price, bundle offering, trust signals). Gear/paraphernalia LP got almost no spend routed to it.</p>
+
+  <h2 id="concepts">🧬 Creative concepts — winners vs rest</h2>
+  <table>
+    <tr><th>Concept</th><th>Variants</th><th>Spend</th><th>Revenue</th><th>ROAS</th></tr>
+    <tr><td><b>not everything makes the passover list|your bubbe didn&#x27;t have these at her seder</b></td><td>1</td><td>$6,420</td><td>$13,479</td><td class="roas-mid"><b>2.10x</b></td></tr><tr><td><b>this passover will be different|the passover lineup is here. schnozberry brings </b></td><td>2</td><td>$3,330</td><td>$7,342</td><td class="roas-mid"><b>2.20x</b></td></tr><tr><td><b>passover, reimagined|seder citrus sold out last passover. now it&#x27;s back — and st</b></td><td>2</td><td>$3,315</td><td>$8,481</td><td class="roas-good"><b>2.56x</b></td></tr><tr><td><b>tj_420ads_2026|</b></td><td>28</td><td>$2,910</td><td>$6,897</td><td class="roas-mid"><b>2.37x</b></td></tr><tr><td><b>eight nights. eight gifts. one miracle box|the host gift that actually gets talk</b></td><td>1</td><td>$2,424</td><td>$5,987</td><td class="roas-mid"><b>2.47x</b></td></tr><tr><td><b>your 8 day elevated ritual|the passover lineup is here. schnozberry brings deep,</b></td><td>2</td><td>$1,988</td><td>$6,200</td><td class="roas-good"><b>3.12x</b></td></tr><tr><td><b>passoveradvent_3|the host gift that actually gets talked about at the table.
+</b></td><td>1</td><td>$1,953</td><td>$6,818</td><td class="roas-good"><b>3.49x</b></td></tr><tr><td><b>tj_420ads_2026|mazel tov — 4/20 is officially kosher. 🕎🌿
+
+we blessed the pr</b></td><td>18</td><td>$1,810</td><td>$4,824</td><td class="roas-good"><b>2.66x</b></td></tr><tr><td><b>puff puff passover ad|the passover lineup is here. schnozberry brings deep, jamm</b></td><td>1</td><td>$1,470</td><td>$4,332</td><td class="roas-good"><b>2.95x</b></td></tr><tr><td><b>yes, they’re passover certified|seder citrus sold out last passover. now it&#x27;s ba</b></td><td>2</td><td>$1,358</td><td>$2,364</td><td class="roas-mid"><b>1.74x</b></td></tr><tr><td><b>spot the certified one|your bubbe didn&#x27;t have these at her seder. but she would&#x27;</b></td><td>1</td><td>$1,152</td><td>$2,377</td><td class="roas-mid"><b>2.06x</b></td></tr><tr><td><b>adventcalinwarehouse_1|the host gift that actually gets talked about at the tabl</b></td><td>1</td><td>$982</td><td>$2,874</td><td class="roas-good"><b>2.93x</b></td></tr>
+  </table>
+
+  <h2 id="recs">🚀 Recommendations — prioritized</h2>
+  <div class="recs">
+    <div class="rec critical">
+      <span class="tag">CRITICAL · week 1</span>
+      <h4>Reinstate TC2 or migrate winners to TC3/TC4</h4>
+      <p>TC2 holds $32k lifetime spend and 122/150 ads but is disabled (Ads Integrity Policy). File appeal + stand up dual-track delivery on TC3 immediately — every day TC2 stays dark, you lose incremental learning on your best audiences.</p>
+    </div>
+    <div class="rec critical">
+      <span class="tag">CRITICAL · week 1</span>
+      <h4>Fix the click → LP-view leak (54% loss)</h4>
+      <p>17,730 clicks never register as LP views. Audit mobile page-weight on tokinjewflower.com, verify Meta pixel deduping, check for third-party redirect interception. Recovering even 30% of this leak = ~$13k incremental revenue at current funnel rates.</p>
+    </div>
+    <div class="rec high">
+      <span class="tag">HIGH · week 2</span>
+      <h4>Triple video output</h4>
+      <p>11 videos → 3.12x ROAS (+31% vs image) and 2.08x CTR. Commission 20–30 more videos in the same voice: single-product story, Kosher stamp, cultural humor, 5–8 sec hook. All routing to Advent Calendar LP.</p>
+    </div>
+    <div class="rec high">
+      <span class="tag">HIGH · week 2</span>
+      <h4>Scale the 4 hidden scalers</h4>
+      <p>4 ads sitting at 3.4x–3.8x ROAS on &lt;$700 spend each. Move them into a consolidated campaign, raise budgets 50%/day until performance drops below 2x.</p>
+    </div>
+    <div class="rec high">
+      <span class="tag">HIGH · week 2</span>
+      <h4>Kill discount-led creatives</h4>
+      <p>42% OFF returned 1.67x ROAS; 30% OFF returned 2.57x. No-offer story creatives returned 2.40x with lower CPP variance. Remove discount-led headlines; reserve promos for retargeting only.</p>
+    </div>
+    <div class="rec med">
+      <span class="tag">MED · week 3</span>
+      <h4>Launch a "single-SKU story" creative series</h4>
+      <p>The winner pattern is crystal: one product's origin story + kosher cert + cultural humor + free-ship mention. Build 3 new flights — one per flagship SKU (Schnozberry, Seder Citrus, Advent Calendar). 3 concept variants × 2 formats × 2 lengths = 12 creatives.</p>
+    </div>
+    <div class="rec med">
+      <span class="tag">MED · week 3</span>
+      <h4>Fix Blood Orange + Schnozberry single-product LPs</h4>
+      <p>Strong creative traffic, weak conversion. Audit: price anchoring vs. Advent Calendar, trust badges above fold, bundle upsell, mobile CTA placement. Target: bring LP ROAS up from 1.87x → 2.5x+.</p>
+    </div>
+    <div class="rec med">
+      <span class="tag">MED · week 3</span>
+      <h4>Pre-build next seasonal flight 14+ days early</h4>
+      <p>4/20 ads launched too close to the date — disapproved/throttled. Passover creatives that launched Mar 6 dominated. Build Shavuot / Rosh Hashanah / Hanukkah creative pipelines 2–3 weeks before peak each.</p>
+    </div>
+    <div class="rec med">
+      <span class="tag">MED · week 4</span>
+      <h4>Consolidate adsets — stop fragmenting LLAs</h4>
+      <p>"LLA 1%", "Stacked LLA 1%", "LLA 1% 180d" duplicates split learning-phase signal across multiple adsets. Collapse into 1–2 consolidated adsets per campaign to let Meta's algo find scale.</p>
+    </div>
+    <div class="rec med">
+      <span class="tag">MED · ongoing</span>
+      <h4>Weekly creative kill-switch at $0.30 CPP threshold</h4>
+      <p>Losers in this dataset all crossed $80+ spend before being paused. Put a daily automated rule: spend &gt; 30% of target CPP AND 0 purchases = auto-pause. Saves ~$500/mo in sunk-cost ads.</p>
+    </div>
+  </div>
+
+  <p class="sub" style="margin-top:48px; text-align:center">Generated 2026-04-21 · <a href="index.html" style="color:#7dd3fc">back to dashboard</a></p>
+</div>
+</body></html>
