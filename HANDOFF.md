@@ -1,141 +1,171 @@
-# Tokin Ads Dashboard — Handoff (2026-04-22, 12:42 MDT)
+# Tokin Ads Dashboard — Handoff (2026-04-22, 12:58 MDT)
 
 ## Live URLs
 - **Dashboard**: https://tokin-ads-dashboard-production.up.railway.app
-- **Creative Breakdown** (same as root): https://tokin-ads-dashboard-production.up.railway.app/creative_breakdown.html
-- **GitHub repo** (now public): https://github.com/davidemasi2/tokin-ads-dashboard
-- **Skill tarball** (145 KB, bundled data + query helper): https://github.com/davidemasi2/tokin-ads-dashboard/raw/main/tokin-ads-advisor.tar.gz
-- **Railway project**: 1d4aee66-d932-4f16-b934-83eaf581043e
+- **Creative Breakdown**: https://tokin-ads-dashboard-production.up.railway.app/creative_breakdown.html
+- **GitHub repo** (public): https://github.com/davidemasi2/tokin-ads-dashboard
+- **Skill tarball**: https://github.com/davidemasi2/tokin-ads-dashboard/raw/main/tokin-ads-advisor.tar.gz
+- **Install one-liner**: `curl -fsSL https://github.com/davidemasi2/tokin-ads-dashboard/raw/main/tokin-ads-advisor.tar.gz | tar -xzf - -C /tmp && bash /tmp/tokin-ads-advisor/install.sh`
 
-## Dataset (unchanged since last handoff)
-- **721 ads** across TC1 (571) · TC2 (122) · TC3 (28) · TC4 (empty)
-- **$356,556 spend · $794,193 revenue · 2.23× ROAS · 10,675 purchases**
-- **97 clusters** covering 635 ads (88%) · **312 unique visual assets** (pHash deduped)
-- **501/721 ads with LPs populated** · **166 compliance-flagged ads**
+## Dataset
+- 721 ads across TC1/TC2/TC3 · $356,556 spend · 2.23× ROAS · 10,675 purchases
+- 97 clusters · 312 unique visuals (pHash deduped) · 166 compliance-flagged
+- Shopify: 25,571 orders · $934K chews rev (12mo) · $194K merch rev
 
-## Dashboard tabs (8)
-1. **Summary** (default) — auto insights + SCALE/KILL/TEST/FIX action list + leaderboards
-2. **Clusters** — asset ranking (pHash deduped) · signal ranking table (26 dims) · per-variant table with targeting/CTA/LP/copy
-3. **Tiers** — flagship/scalers/winners/marginal/losers/money pits/untested
-4. **Patterns** — 14 ROAS-ranked tables, sortable
-5. **Targeting** — strategy + audience-tag, sortable
-6. **Compliance** — FDA/Health/THC-CBD/Superlative/Time-urgency flagged
-7. **Reproduce** — live recommendations: Optimize for ROAS/CPP/CTR/Compliance-safe · min spend · show 10-100
-8. **All ads** — flat sortable
+## Skills installed
+- **tokin-ads-advisor** — ad intelligence, bundled data, query helper
+- **tokin-jew-db** — live Shopify/Klaviyo DB
 
-All views filter-aware (Year · Account · Format · Tier · Offer · min-spend slider · full-text search) + sort by CPP everywhere.
+## Notion pages
+- **Internal Tools Guide** (`34a26136-b372-8187-b7eb-c53325bf1630`) — updated to 4 tools: Command Center · Claude DB Skill · Claude Ads Advisor · Ads Dashboard
+- **Paid Media Plan** — **PENDING** (see below for final spec)
 
-## Skills shipped this session
-- **tokin-ads-advisor** — installed at `~/.claude/skills/tokin-ads-advisor/` globally + packaged as standalone tarball
-  - Auto-invokes on Tokin ads questions
-  - `query.py` helper with top/find/ad/cluster/group/compare/list-clusters commands
-  - 721 ads of data bundled — zero dependencies
-  - One-line install: `curl -fsSL https://github.com/davidemasi2/tokin-ads-dashboard/raw/main/tokin-ads-advisor.tar.gz | tar -xzf - -C /tmp && bash /tmp/tokin-ads-advisor/install.sh`
-  - Cross-references `tokin-jew-db` skill for live Shopify/Klaviyo queries
-- **tokin-jew-db** — existing skill that this one chains to for commerce questions
+---
 
-## Notion pages updated
-- **Internal Tools Guide** (`34a26136-b372-8187-b7eb-c53325bf1630`) — 4 tools: Command Center · Claude DB Skill · **Claude Ads Advisor (new section 3)** · Ads Dashboard
+# 🎯 PAID MEDIA PLAN — Final decision snapshot
 
-## Thumbnail strategy (unchanged)
-- Local (`file://`/localhost): `fullres/` → `thumbnails_med/` → `thumbnails/`
-- Remote (Railway): `thumbnails_med/` (500×500) → `thumbnails/` fallback
-- Videos: local = `videos/`, remote = GitHub raw URLs
-- Sizes: ad-card 100px · member-grid 72px · Reproduce hero 220px · asset-rank card 180px · variant-table 48px
+## Context
+- Onboarding new media buyer → needs safe baseline to start
+- Past Passover (Apr 9) and past 4/20 → entering May-Aug Jewish holiday desert
+- **Cookies and gelt inventory low** → must shelve gelt/cookie-dependent plays
+- Goal: rebuild channel with graduated-risk campaigns, chews LTV is 40% higher than merch ($116 vs $82) but faces 28% compliance-flag rate — so merch is ToFu and chews comes second
 
-## Data pipeline
-```
-raw/ads_{acc}.json + raw/insights_{acc}.json
-  └─ merge_all.py           → data/merged.json (721 rows)
-  └─ analyze.py             → data/analysis.json
-  └─ dedup_assets.py        → data/asset_groups.json (pHash/dHash, Hamming ≤6)
-  └─ enrich_creative.py     → data/creative_enriched.json
-  └─ make_medium_thumbs.py  → thumbnails_med/ (500×500 q85)
-  └─ build_breakdown.py     → public/creative_breakdown.html + public/index.html
-```
+## Active 5 campaigns (deploy now)
 
-## Commands
-```bash
-# Full rebuild
-python3 merge_all.py && python3 analyze.py && python3 dedup_assets.py && python3 enrich_creative.py && python3 build_breakdown.py
-cp public/creative_breakdown.html public/index.html public-lite/creative_breakdown.html public-lite/index.html
+### A. Shabbat Summer — 🟢 LOW RISK
+- **Concept**: Weekly Shabbat ritual items (Kiddush Cup · The Mezazah · Challah Pipe)
+- **Hero**: Ad `120236100453450484` "Kiddush Cup (sqr) V5" / "Sip it & Rip It 🍷" — image · **6.04× ROAS** · $917 spend · $17 CPP · 2.28% CTR · 54 purchases
+- **Thumb URL**: https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_e2ec163176c5.jpg
+- **Backup**: Ad `120234591667130484` V2 — 2.54× · $4K spend · $28 CPP
+- **LP**: tokinjew.com/collections/glassware
+- **Targeting**: LAL 1% All Website Visitors 180d
+- **Budget**: $100/day, 5-ad rotation
+- **Expected**: 2.2–2.5× ROAS · $30–40 CPP · steady baseline
 
-# Skill refresh (after data re-enrichment)
-cp data/creative_enriched.json data/asset_groups.json ~/.claude/skills/tokin-ads-advisor/data/
-cd ~/.claude/skills && tar -czf /tmp/tokin-ads-advisor.tar.gz --exclude='*.tar.gz' tokin-ads-advisor/
-cp /tmp/tokin-ads-advisor.tar.gz ~/.claude/skills/tokin-ads-advisor/
-cp /tmp/tokin-ads-advisor.tar.gz "{WORKING_DIR}/public/"
-cd {WORKING_DIR}/public && git add -A && git commit -m "refresh skill data" && git push
+### D. Kosher Closet Summer — 🟢 LOW RISK
+- **Concept**: Apparel ToFu → post-purchase 20% chews code
+- **Hero**: Ad `120235840343690484` "guiltypleasure.2" — video · **4.80× ROAS** · $418 spend · $17 CPP · 5.19% CTR (portfolio-leading CTR)
+- **Thumb URL**: https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails/120235840343690484_20bc4d3065.jpg
+- **Products (by 2026 order volume)**: Mensch Hat (420/yr) · L'Chaim Tie Dye T-Shirt (415) · One Fish Two Fish T-Shirt (400) · Let's Get Chai T-Shirt (387)
+- **Summer aesthetic**: tie-dye, camp nostalgia, BBQ/festival scenes
+- **LP**: tokinjew.com/collections/tokin-chews-merch + post-purchase redirect to tokinjewflower.com/kosher-tokin20
+- **Budget**: $150/day
+- **Expected**: 2.1–2.4× ROAS · $30–40 CPP · 12.5% chews crossover · LTV-ROAS ~3.5×
 
-# Deploy
-(cd public && git add -A && git commit -m "..." && git push)  # GitHub (public) — videos served from raw URLs
-(cd public-lite && mv videos /tmp/v_$$ && railway up --detach && mv /tmp/v_$$ videos)
+### F. Pipes & Grinders — 🟢 LOW-MED RISK
+- **Concept**: Jewish food-pun paraphernalia as "novelty gifts" (NOT functional gear)
+- **Products**: Challah Pipe · Pickle Pipe · Bagel & Lox Grinder · Shofar Pipe · Dreidel Grinder (all appear in summer top-sellers $3–5K each)
+- **Evidence**: 33 clean paraphernalia ads at 2.25× ROAS on $12K
+- **Copy discipline**: "novelty/collectible/gift/kitchen-meets-kosher" ✅ · never "smoke/hit/bowl/session" ❌
+- **Mitigation**: separate Page (`@tokinjew-kitchen` or similar) to isolate if flagged
+- **Budget**: $100/day
+- **Expected**: 2.0–2.4× ROAS · $30–45 CPP · 12.5% crossover
 
-# Query helper (works anywhere)
-python3 ~/.claude/skills/tokin-ads-advisor/query.py top roas 10 --min-spend 500
-python3 ~/.claude/skills/tokin-ads-advisor/query.py cluster C003
-python3 ~/.claude/skills/tokin-ads-advisor/query.py group --by audience --metric cpp --asc
-```
+### C. Daytime/Nighttime Chai Routine — 🟡 MEDIUM RISK
+- **Concept**: Functional chews as summer daily routine — replaces lost cookies/gelt volume
+- **Hero**: Ad `120239040920820484` "Your New Daytime Chai 👉🏼" — **2.90× ROAS** on $2K · $36 CPP
+- **Thumb URL**: https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_9ca11ea08e18.jpg
+- **Backups**: `120227491006930484` "Mitzvah-Grade Chai" 2.79× · `120214902880040484` "Let's Get Chai" 2.74×
+- **Product matrix**:
+  - Morning → Apple-Energy & Focus / Apple THCV ($9K summer rev)
+  - Afternoon → Watermelon High Dose ($26K summer rev — top seller)
+  - Evening → Passionfruit Guava / Mango Peach
+  - Night → Grape-Sleep & Relax ($11K summer rev) / Grape CBN
+- **Copy discipline**: "chai" + time-context only · NEVER "relief/anxiety/sleep aid/pain/high/stoned"
+- **Budget**: $150-300/day scalable
+- **Expected**: 2.3–2.8× ROAS · $35–45 CPP · primary volume engine May-Aug
 
-## Paid Media Plan analysis — PENDING NOTION PAGE
-*This session's big deliverable — full 3-campaign strategy for new media buyer onboarding.*
+### E. Which Tokin' Jew Are You? Quiz — 🔴 HIGH RISK
+- **Concept**: Interactive archetype quiz → product recommendation → email capture → chews offer
+- **Proof**: Ad `120239611228270484` "Mix, Match, & Get Chai" (COMPLIANT) — **3.64× ROAS** · $1.5K · $31 CPP
+- **Thumb URL**: https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_aa235400dc5a.jpg
+- **Archetypes**: The Rabbi (Sleep & Relax) · The Bubbe (variety pack) · The Mensch (Tokin' Jays) · The Schlimazel (Watermelon High Dose)
+- **Infrastructure**: NEW Business Manager + new Page + jump page on `tokinjewquiz.com`
+- **Quiz stack**: Typeform or native HTML → email capture → Klaviyo flow → $10 off first chews order
+- **Budget**: $50/day × 14 days · scale if CAC < $30
+- **Expected**: 2.5–4.0× ROAS · 40-60% email capture on completers · best-case blended LTV-ROAS ~5×
+- **Setup time**: 10-14 days (new BM + jump page) — can build in parallel with A/D/F/C execution
 
-**Plan summary (3 campaigns across risk spectrum):**
+## Deployment — "Merch Wall First" (Option 2)
 
-### Campaign #1 — "Kosher Closet" 🟢 LOW RISK
-Apparel ToFu → 12.5% crossover to chews. $100K historical data at 2.28× ROAS, 0 compliance flags. Hero: Ad `120235840343690484` guiltypleasure.2 video (4.80× ROAS, $17 CPP). Backup: Ad `120236100453450484` Kiddush Cup V5 (6.04× ROAS). Main BM, LAL 1%, $150/day start. Expected LTV-ROAS ~3.5×.
+| Week | Launch | Main BM budget | New BM budget |
+|---|---|---:|---:|
+| W1 | A + D + F | $350/day | — |
+| W2 | Add C | $550/day | start BM/jump page build |
+| W3 | All 4 live | $650/day | infra build continues |
+| W4 | Add E on new BM | $650/day | $50/day |
+| W5+ | Scale winners · kill losers | $800–1,200/day | $50–200/day |
 
-### Campaign #2 — "Gifting Funnel" 🟢 LOW-MEDIUM RISK
-Gelt + cookies + bundles. 2.40× ROAS on $67K gelt + 2.38× on $77K cookies (only 8 flagged of 88). **Chocolate gelt is #1 crossover product** (167 post-merch orders on chews brand). Hero: Ad `120235839731570484` "Gelt that gets you chai DC V1" ($27K · 2.92× ROAS). Season lift: Spring runs 2.52× vs Fall 2.10× — time Feb-May. Expected LTV-ROAS ~4.0×.
+**30-day projection** (this deployment): ~$17K spend · 2.4× blended ROAS · $41K revenue · ~650 customers acquired · ~80 merch→chews crossovers banked for future LTV
 
-### Campaign #3 — "Which Tokin' Jew Are You?" 🟡 HIGHER RISK
-Interactive quiz ToFu. Proof point: Ad `120239611228270484` "Mix, Match, & Get Chai" compliance-clean at 3.64× ROAS. Quiz archetypes: Rabbi/Bubbe/Mensch/Schlimazel → flavor recommendation. Requires **new Business Manager + jump page** (`tokinjewquiz.com`) to isolate risk. $50/day for 14 days, scale if CAC < $30.
+## Shelved (revive on trigger)
 
-**Key data cited:**
-- LTV by first-brand: chews-first $116 vs merch-first $82 (40% higher)
-- Merch → chews crossover rate: apparel 12.5% · paraphernalia 12.5% · papers 10.5% · judaica 6.8%
-- Top crossover products: Chocolate Gelt ($11.8K), Watermelon High Dose, flavor variety
-- Compliance flag rate by bucket: gummy 28%, papers 20%, clothing 0%
-- Character video CTR 5.19% (portfolio-leading, only 13 clean ads — under-explored)
-
-**Creative hero ad IDs + thumbnails** (for the Notion page):
-| Ad ID | Fmt | Name | Thumb path |
+| ID | Campaign | Revive trigger | Evidence |
 |---|---|---|---|
-| 120235840343690484 | video | guiltypleasure.2 | thumbnails/120235840343690484_20bc4d3065.jpg |
-| 120235839927630484 | image | Gelt that gets you chai DC V2 | thumbnails_med/adimg_1449383908993328_7e754b6be9c1.jpg |
-| 120236100453450484 | image | Kiddush Cup (sqr) V5 | thumbnails_med/adimg_1449383908993328_e2ec163176c5.jpg |
-| 120235839731570484 | image | Gelt that gets you chai DC V1 | thumbnails_med/adimg_1449383908993328_f45b3b26320f.jpg |
-| 120219109515800484 | image | Hamantaschen - Header | thumbnails_med/adimg_1449383908993328_bc03ec5ddf3e.jpg |
-| 120239611228270484 | image | TC x Variety Pack (sqr) V1 (COMPLIANT) | thumbnails_med/adimg_1449383908993328_aa235400dc5a.jpg |
-| 120234591667130484 | image | Kiddush Cup (sqr) V2 | thumbnails_med/adimg_1449383908993328_fb1766ba75e1.jpg |
-| 120237189249690484 | image | THE CHAI HOLIDAYS Hanukkah Bundle | thumbnails_med/adimg_1449383908993328_4fcf84854af6.jpg |
-| 120235840055520484 | image | Gelty Pleasure (sqr) V1 | thumbnails_med/adimg_1449383908993328_0fd1cd3a8fc7.jpg |
-| 120220249726550484 | image | K4P - image - cirtus | thumbnails_med/adimg_1449383908993328_ee2ab9fb5028.jpg |
-| 120240805947640484 | video | TokinChew Brand Awareness V2 | thumbnails/120240805947640484_3d0ba2c8eb.jpg |
+| G | Gifting Funnel (Gelt) | Gelt restocked → ramp Oct for Hanukkah | 2.92× ROAS · $27K spend · #1 crossover product ($11.8K from merch-first buyers) |
+| H | Hamantaschen / Purim Cookies | Cookies restocked → Feb-Mar 2027 (Purim) | Hero `120219109515800484` hit **7.04× ROAS** on $415 — needs scaling |
 
-**Remote URL prefix for thumbnails**: `https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/`
+## Seasonal calendar
 
-## NEXT SESSION — TO BUILD
-1. **Create Notion page "Paid Media Plan"** under "Tokin' Home" (parent: `06b26136-b372-83ae-b247-81e3464c837a`)
-   - Top of page: Links to 4 tools (Command Center, Claude DB Skill, Claude Ads Advisor, Ads Dashboard)
-   - Section 1: Evidence tables (performance by bucket, crossover rates, LTV)
-   - Section 2: Campaign #1 Kosher Closet — full brief + hero creative thumbnails
-   - Section 3: Campaign #2 Gifting Funnel — full brief + hero creative thumbnails
-   - Section 4: Campaign #3 Tokin Jew Quiz — full brief + jump page spec
-   - Section 5: Deployment calendar (W1-W7+)
-   - Section 6: 90-day projected economics table
-   - Section 7: Non-negotiables for new media buyer
-2. Use GitHub raw URLs for all thumbnails so they render inline in Notion
-3. Optional follow-ups user may request: ad-copy drafts, quiz spec, nano-banana hero generation, media plan doc
+| ID | Campaign | Window | Evidence |
+|---|---|---|---|
+| I | Passover Bundle (Kosher for Passover) | **Feb-Apr 2027** | Cluster C001 · 67 variants · **3.28× ROAS** (best category) |
+| J | 4/20 Kosher | **Apr 2027** (just passed) | 66 ads · 2.60× · 0 flags |
 
-## Known gaps / next refresh
-- Data snapshot is 2026-04-21 · re-pull Meta if campaigns launch
-- 87 Meta video source URLs have expired — rerun `pull_videos_missing.py` with fresh token if needed
-- fullres/ is local-only (318 MB too big for Railway)
+## Non-negotiables for new media buyer
+1. Never use: THC, CBD, high, stoned, weed, relief, cure, medicine
+2. Never link ads directly to gummy PDPs on new BM — always via jump page
+3. Keep main BM's TC1 account health perfect — test only on new BM
+4. Naming convention: `[Brand]_[Concept]_[Angle]_[Variant]` so dashboard clusters track them
 
-## Recent commits (top 10)
+---
+
+# PENDING next session
+
+## Build Notion "Paid Media Plan" page
+- **Parent**: Tokin' Home (`06b26136-b372-83ae-b247-81e3464c837a`)
+- **Top of page**: Links to all 4 tools (Command Center, Claude DB Skill, Claude Ads Advisor, Ads Dashboard)
+- **Sections**:
+  1. Context + why this plan
+  2. Evidence tables (bucket ROAS, LTV by first-brand, crossover rates, summer seller rankings)
+  3. Campaign A full brief + hero thumbnail (render inline from GitHub raw URL)
+  4. Campaign D full brief + hero thumbnail
+  5. Campaign F full brief + hero thumbnail
+  6. Campaign C full brief + hero thumbnail
+  7. Campaign E full brief + jump page spec
+  8. Deployment calendar (Option 2 Merch Wall First)
+  9. 30/90-day projected economics
+  10. Shelved + Seasonal table (revive triggers)
+  11. Non-negotiables
+
+## Use these exact image URLs (medium-res 500×500, public GitHub raw)
+| Ad | URL |
+|---|---|
+| A · Kiddush V5 (hero) | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_e2ec163176c5.jpg |
+| A · Kiddush V2 | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_fb1766ba75e1.jpg |
+| D · guiltypleasure video | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails/120235840343690484_20bc4d3065.jpg |
+| D · Gelt that gets you chai V2 | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_7e754b6be9c1.jpg |
+| C · Your New Daytime Chai | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_9ca11ea08e18.jpg |
+| C · Mitzvah-Grade Chai | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails/120227491006930484_54b52dc3de.jpg |
+| C · Let's Get Chai | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_36673b59f385.jpg |
+| E · Mix Match Get Chai (quiz) | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_aa235400dc5a.jpg |
+| E · Worth Your Two Zuzim | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails/120220249587130484_10732fe177.jpg |
+| G · Gelt champ (shelved ref) | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_f45b3b26320f.jpg |
+| H · Hamantaschen (shelved ref) | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_bc03ec5ddf3e.jpg |
+| I · K4P Passover (seasonal ref) | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_ee2ab9fb5028.jpg |
+
+## User decisions pending
+- Green-light Option 2 "Merch Wall First" deployment sequence?
+- Launch creative copy drafts for A/D/F/C?
+- Spec out Campaign E jump page (tokinjewquiz.com) + archetype-to-product mapping?
+- Draft the post-purchase thank-you redirect spec for D?
+
+---
+
+## Recent commits
 ```
-a881c3c  Ship tokin-ads-advisor skill tarball (standalone, 145KB, bundled data)
+081305b  Handoff update: Paid Media Plan deliverable documented
+a881c3c  Ship tokin-ads-advisor skill tarball (standalone, 145KB)
 4d62d23  Add query.py helper for tokin-ads-advisor skill
 e044bee  Update HANDOFF: clusters · asset dedup · variant tables · CPP sort
 6ab67b5  CPP + full metric sort coverage on Tiers/Clusters/Compliance/All-ads
@@ -144,5 +174,4 @@ e044bee  Update HANDOFF: clusters · asset dedup · variant tables · CPP sort
 3b0e503  Cluster sort: Winner-only options (ROAS/CPP/CTR/CPM/purchases/spend)
 9e510e0  Perceptual-hash asset dedup: 721 ads → 312 unique visuals
 05f6812  Per-asset ranking inside cluster cards with delta-vs-median
-5e1677f  Cluster signals: 26 creative+targeting dims ranked with strength bars
 ```
