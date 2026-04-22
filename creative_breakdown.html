@@ -43,9 +43,9 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .roas-mid{color:#fbbf24}
 .roas-bad{color:#ef4444}
 .grid{display:grid;gap:12px}
-.ad-card{background:#101019;border:1px solid #272740;border-radius:10px;padding:12px;display:grid;grid-template-columns:80px 1fr;gap:12px;transition:border-color .15s}
+.ad-card{background:#101019;border:1px solid #272740;border-radius:10px;padding:12px;display:grid;grid-template-columns:100px 1fr;gap:14px;transition:border-color .15s}
 .ad-card:hover{border-color:#3b82f6}
-.ad-card img{width:80px;height:80px;object-fit:cover;border-radius:6px;background:#151524}
+.ad-card img{width:100px;height:100px;object-fit:cover;border-radius:6px;background:#151524}
 .ad-card .body{display:flex;flex-direction:column;gap:6px;min-width:0}
 .ad-name{font-weight:500;font-size:13px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ad-meta{display:flex;gap:6px;flex-wrap:wrap;font-size:11px;color:#8e8ea0;align-items:center}
@@ -123,9 +123,33 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .cluster-body{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
 .cluster-quote{background:#0a0a13;border-left:2px solid #3b82f6;padding:8px 12px;font-size:12px;color:#c7c7d1;font-style:italic;border-radius:0 6px 6px 0}
 .member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px;margin-top:10px}
-.member-grid img{width:56px;height:56px;object-fit:cover;border-radius:4px;background:#151524;cursor:pointer;transition:transform .1s}
+.member-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr))!important}
+.member-grid img{width:72px;height:72px;object-fit:cover;border-radius:5px;background:#151524;cursor:pointer;transition:transform .1s}
 .member-grid img:hover{transform:scale(1.1);outline:2px solid #3b82f6}
 .reproduce{background:linear-gradient(135deg,#1e1e3a,#0f0f1f);border:1px solid #3b82f6;border-radius:12px;padding:16px;margin-bottom:14px}
+.repro-top{display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:start;margin-bottom:12px}
+.repro-hero{display:flex;justify-content:center}
+.repro-hero-img,.repro-hero .vid-wrap{width:220px;height:220px;border-radius:10px;object-fit:cover;background:#151524;display:block}
+.repro-hero .vid-wrap{position:relative;cursor:pointer;overflow:hidden}
+.repro-hero .vid-wrap img{width:220px;height:220px;object-fit:cover;border-radius:10px}
+.repro-hero .vid-wrap video{width:220px;height:220px;border-radius:10px}
+.repro-hero .vid-wrap .play-btn{width:52px;height:52px;font-size:20px}
+.repro-head{min-width:0}
+.repro-body{margin-top:6px}
+.tv-table{width:100%;border-collapse:collapse;background:transparent;border:none;margin:0;font-size:12px}
+.tv-table td{padding:8px 10px;border-bottom:1px solid #1e1e3a;vertical-align:middle;color:#c7c7d1}
+.tv-table tr:last-child td{border-bottom:none}
+.tv-table .tv-winner td{background:rgba(34,197,94,.08)}
+.tv-table .tv-rank{color:#8e8ea0;font-variant-numeric:tabular-nums;width:36px;font-weight:600}
+.tv-table .tv-winner .tv-rank{color:#22c55e}
+.tv-table .tv-thumb{width:72px}
+.tv-table .tv-thumb img{width:64px;height:64px;object-fit:cover;border-radius:5px;background:#151524;display:block}
+.tv-table .tv-name{color:#fff;font-weight:500;font-size:12px}
+.tv-table .tv-sub{color:#8e8ea0;font-size:10.5px;margin-top:2px;font-weight:400}
+.tv-table .tv-metric{text-align:right;color:#fff;font-weight:600;font-variant-numeric:tabular-nums;width:90px}
+.tv-table .tv-winner .tv-metric{color:#22c55e}
+.tv-table .tv-meta{text-align:right;color:#c7c7d1;font-variant-numeric:tabular-nums;width:110px}
+@media (max-width:700px){.repro-top{grid-template-columns:1fr}.repro-hero-img,.repro-hero .vid-wrap,.repro-hero .vid-wrap img,.repro-hero .vid-wrap video{width:100%;max-width:320px;height:auto;aspect-ratio:1}}
 .rep-row{display:grid;grid-template-columns:140px 1fr;gap:10px;padding:6px 0;border-top:1px solid #272740;font-size:13px}
 .rep-row:first-of-type{border-top:none}
 .rep-lbl{color:#8e8ea0;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding-top:2px}
@@ -135,11 +159,11 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 details{margin-top:6px}
 summary{cursor:pointer;color:#8e8ea0;font-size:12px;user-select:none;padding:4px 0}
 summary:hover{color:#c7c7d1}
-.no-thumb{width:80px;height:80px;background:linear-gradient(135deg,#1a1a2e,#151524);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#8e8ea0}
-.vid-wrap{position:relative;width:80px;height:80px;cursor:pointer;border-radius:6px;overflow:hidden;flex-shrink:0}
-.vid-wrap img{width:80px;height:80px;object-fit:cover;border-radius:6px;background:#151524;display:block}
-.vid-wrap video{width:80px;height:80px;border-radius:6px;display:block;object-fit:cover}
-.play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;background:rgba(0,0,0,.65);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;pointer-events:none;padding-left:2px}
+.no-thumb{width:100px;height:100px;background:linear-gradient(135deg,#1a1a2e,#151524);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#8e8ea0}
+.vid-wrap{position:relative;width:100px;height:100px;cursor:pointer;border-radius:6px;overflow:hidden;flex-shrink:0}
+.vid-wrap img{width:100px;height:100px;object-fit:cover;border-radius:6px;background:#151524;display:block}
+.vid-wrap video{width:100px;height:100px;border-radius:6px;display:block;object-fit:cover}
+.play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;background:rgba(0,0,0,.72);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;pointer-events:none;padding-left:3px}
 /* SUMMARY TAB */
 .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-top:4px}
 .summary-box{background:#101019;border:1px solid #272740;border-radius:12px;padding:16px}
@@ -766,7 +790,7 @@ function adCard(a){
   if(vs){
     thumb = ts
       ? '<div class="vid-wrap" data-video-src="'+esc(vs)+'"><img src="'+esc(ts)+'" loading="lazy"><div class="play-btn">&#9654;</div></div>'
-      : '<div class="vid-wrap" data-video-src="'+esc(vs)+'"><div class="no-thumb" style="width:80px;height:80px">▶</div></div>';
+      : '<div class="vid-wrap" data-video-src="'+esc(vs)+'"><div class="no-thumb" style="width:100px;height:100px">▶</div></div>';
   } else {
     thumb = ts ? '<img src="'+esc(ts)+'" loading="lazy">' : '<div class="no-thumb">no thumb</div>';
   }
@@ -1380,9 +1404,22 @@ function renderReproduce(){
   }
 
   document.getElementById('reproduce-out').innerHTML = clusterStats.map(c=>{
-    // Extract creative recipe from members
     const members = c.members;
-    const winner = members.reduce((a,b)=>a.roas>b.roas?a:b);
+    const metricKey = optFor==='compliance' ? 'roas' : optFor;
+    const mdef = METRIC_DEFS[metricKey];
+    // Per-metric winner (not just ROAS)
+    const winnerGetter = m => mdef.get(m);
+    const sortedByMetric = members.slice().sort((a,b)=>{
+      const va = winnerGetter(a), vb = winnerGetter(b);
+      return mdef.higherBetter ? vb-va : va-vb;
+    });
+    const winner = sortedByMetric[0];
+    const topVariants = sortedByMetric.slice(0, 3);
+    // Asset ranking inside this cluster
+    const assets = buildAssetRanking(members, metricKey);
+    const topAsset = assets[0];
+
+    // Aggregate counts across members
     const hookCounts = {}, titleCounts = {}, toneCounts = {}, lengthCounts = {}, offerCounts = {}, ctaCounts = {}, audCounts = {}, stratCounts = {};
     members.forEach(m=>{
       if(m.patterns.hook) hookCounts[m.patterns.hook] = (hookCounts[m.patterns.hook]||0)+1;
@@ -1406,36 +1443,68 @@ function renderReproduce(){
     const strategy = topN(stratCounts, 1)[0]?.[0] || '';
     const topAuds = topN(audCounts, 4).map(x=>x[0]);
     const fmtDominant = (()=>{const fc={};members.forEach(m=>{fc[m.fmt]=(fc[m.fmt]||0)+1});return topN(fc,1)[0]?.[0] || c.fmt || '';})();
-    const winnerThumb = thumbSrc(winner) ? '<img src="'+esc(thumbSrc(winner))+'" style="width:100%;max-width:160px;border-radius:6px">' : '';
+    // Hero thumb = top asset's representative member (better than per-ad winner, since asset is the reproducible unit)
+    const heroAd = topAsset ? topAsset.rep : winner;
+    const heroTs = thumbSrc(heroAd); const heroVs = videoSrc(heroAd);
+    const heroThumb = heroTs
+      ? (heroVs
+          ? '<div class="repro-hero-vid vid-wrap" data-video-src="'+esc(heroVs)+'"><img src="'+esc(heroTs)+'" loading="lazy"><div class="play-btn">&#9654;</div></div>'
+          : '<img src="'+esc(heroTs)+'" loading="lazy" class="repro-hero-img">')
+      : '<div class="no-thumb repro-hero-img">no thumb</div>';
     const dateRange = (members.map(m=>m.created).filter(Boolean).sort());
     const firstSeen = dateRange[0] || '';
     const lastSeen = dateRange[dateRange.length-1] || '';
 
-    const prompt = 'Create a '+fmtDominant+' ad in the "'+(tones.map(t=>t[0]).join(', ')||'standard')+'" style. '+
-      'Hook with: "'+(hooks[0]?.[0]||'')+'...". '+
-      'Body length: '+bodyLen+'. '+
-      'Headline idea: "'+(titles[0]?.[0]||'')+'". '+
-      'CTA: '+cta+'. '+
-      'Offer angle: '+(offers.join(' or ')||'no explicit offer, brand-led')+'. '+
-      'Target audience strategy: '+strategy+' — top audiences: '+(topAuds.join(', ')||'broad')+'.';
+    // Asset info line
+    const assetLine = topAsset
+      ? (assets.length > 1
+          ? '<b>🖼 Top asset:</b> drove '+fmtMoney(topAsset.spend)+' ('+((topAsset.spend/c.spend)*100).toFixed(0)+'% of cluster spend) across '+topAsset.variants+' ad variants · '+mdef.label+' '+mdef.fmt(mdef.get(topAsset))+(assets.length>1?' (vs '+(assets.length-1)+' other visual'+(assets.length>2?'s':'')+' in this cluster)':'')
+          : '<b>🖼 Single visual</b> across '+topAsset.variants+' variant'+(topAsset.variants>1?'s':''))
+      : '';
+
+    const prompt = 'Reproduce the following ad exactly in style, then swap copy.\n'+
+      'Format: '+fmtDominant+'.\n'+
+      'Visual: '+(topAsset ? 'Match the reference image asset used by the top variant (ad '+winner.id+' · "'+winner.name+'").' : 'Match the winning variant\'s look.')+'\n'+
+      'Tone: '+(tones.map(t=>t[0]).join(', ')||'standard')+'.\n'+
+      'Hook (first sentence): "'+(hooks[0]?.[0]||'')+'".\n'+
+      'Body length: '+bodyLen+'.\n'+
+      'Headline: "'+(titles[0]?.[0]||'')+'".\n'+
+      'CTA: '+cta+'.\n'+
+      'Offer: '+(offers.join(' or ')||'no explicit offer, brand-led')+'.\n'+
+      'Targeting: '+strategy+' — audiences: '+(topAuds.join(', ')||'broad')+'.';
+
+    // Top-variant breakdown table
+    const topVariantRows = topVariants.map((v,i)=>{
+      const ts = thumbSrc(v);
+      const vCpp = v.purchases ? v.spend/v.purchases : 0;
+      return '<tr class="tv-row'+(i===0?' tv-winner':'')+'"><td class="tv-rank">#'+(i+1)+'</td><td class="tv-thumb">'+(ts?'<img src="'+esc(ts)+'" loading="lazy">':'—')+'</td><td class="tv-name">'+esc(v.name)+'<div class="tv-sub">'+esc(v.created)+' · '+esc(v.account)+(v.cta?' · '+esc(v.cta):'')+'</div></td><td class="tv-metric">'+mdef.fmt(mdef.get(v))+'</td><td class="tv-meta">'+fmtMoney(v.spend)+'<div class="tv-sub">'+fmtNum(v.purchases)+' purch · '+(vCpp?'CPP '+fmtMoney(vCpp):'—')+'</div></td></tr>';
+    }).join('');
 
     return '<div class="reproduce" data-cluster-id="'+esc(c.cluster_id)+'">'+
-      '<div class="cluster-hdr"><div>'+
-        '<div class="cluster-title">#'+c._rank+' · '+esc(c.cluster_id)+' · '+(c.is_solo?'solo ad':c.members.length+' variants')+' · '+fmtDominant+'</div>'+
-        '<div class="cluster-stats"><span>'+fmtMoney(c.spend)+' spend</span><span>'+fmtRoas(c.roas)+' ROAS</span><span>'+fmtNum(c.purchases)+' purch</span><span>CPP '+(isFinite(c.cpp)?fmtMoney(c.cpp):'—')+'</span><span>CTR '+c.ctr.toFixed(2)+'%</span><span>'+esc(firstSeen)+' → '+esc(lastSeen)+'</span>'+(c.flag_count?'<span class="tag flag">⚠ '+c.flag_count+' flag'+(c.flag_count>1?'s':'')+'</span>':'<span class="tag" style="background:#14532d;color:#bbf7d0">✓ no flags</span>')+'</div>'+
-      '</div>'+winnerThumb+'</div>'+
-      '<div class="insight win" style="margin:10px 0 6px">'+reasonLbl(c)+'</div>'+
-      '<div class="rep-row"><div class="rep-lbl">Format</div><div class="rep-val">'+esc(fmtDominant)+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Hook formulas</div><div class="rep-val"><ul>'+hooks.map(h=>'<li>"'+esc(h[0])+'..." ('+h[1]+' variants)</li>').join('')+'</ul></div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Winning headlines</div><div class="rep-val"><ul>'+titles.map(h=>'<li>"'+esc(h[0])+'"</li>').join('')+'</ul></div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Body length</div><div class="rep-val">'+esc(bodyLen)+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Tone</div><div class="rep-val">'+tones.map(t=>'<span class="tag">'+esc(t[0])+' ('+t[1]+')</span>').join(' ')+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Offer angles</div><div class="rep-val">'+(offers.map(o=>'<span class="tag offer">'+esc(o)+'</span>').join(' ')||'<span class="tag">no explicit offer</span>')+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">CTA</div><div class="rep-val">'+esc(cta||'n/a')+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Targeting</div><div class="rep-val">'+esc(strategy)+' · '+topAuds.map(a=>'<span class="tag">'+esc(a)+'</span>').join(' ')+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Top winner</div><div class="rep-val">'+esc(winner.name)+' · '+fmtMoney(winner.spend)+' · '+fmtRoas(winner.roas)+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">One-shot prompt</div><div class="rep-val"><div class="prompt-box">'+esc(prompt)+'</div></div></div>'+
-      '<details style="margin-top:10px"><summary>See all '+members.length+' variants</summary><div class="grid" style="margin-top:10px">'+members.slice().sort((a,b)=>b.spend-a.spend).map(m=>adCard(m)).join('')+'</div></details>'+
+      '<div class="repro-top">'+
+        '<div class="repro-hero">'+heroThumb+'</div>'+
+        '<div class="repro-head">'+
+          '<div class="cluster-title">#'+c._rank+' · '+esc(c.cluster_id)+' · '+(c.is_solo?'solo ad':c.members.length+' variants')+' · '+fmtDominant+'</div>'+
+          '<div class="cluster-stats"><span>'+fmtMoney(c.spend)+' spend</span><span>'+fmtRoas(c.roas)+' ROAS</span><span>'+fmtNum(c.purchases)+' purch</span><span>CPP '+(isFinite(c.cpp)?fmtMoney(c.cpp):'—')+'</span><span>CTR '+c.ctr.toFixed(2)+'%</span><span>'+esc(firstSeen)+' → '+esc(lastSeen)+'</span>'+(c.flag_count?'<span class="tag flag">⚠ '+c.flag_count+' flag'+(c.flag_count>1?'s':'')+'</span>':'<span class="tag" style="background:#14532d;color:#bbf7d0">✓ no flags</span>')+'</div>'+
+          '<div class="insight win" style="margin:10px 0 0">'+reasonLbl(c)+'</div>'+
+          (assetLine?'<div class="insight" style="margin:6px 0 0">'+assetLine+'</div>':'')+
+        '</div>'+
+      '</div>'+
+      '<div class="repro-body">'+
+        '<div class="rep-row"><div class="rep-lbl">Top '+Math.min(3,members.length)+' variants</div><div class="rep-val"><table class="tv-table"><tbody>'+topVariantRows+'</tbody></table></div></div>'+
+        '<div class="rep-row"><div class="rep-lbl">Format</div><div class="rep-val">'+esc(fmtDominant)+'</div></div>'+
+        '<div class="rep-row"><div class="rep-lbl">Hook formulas</div><div class="rep-val"><ul>'+hooks.map(h=>'<li>"'+esc(h[0])+'..." ('+h[1]+' variants)</li>').join('')+'</ul></div></div>'+
+        '<div class="rep-row"><div class="rep-lbl">Winning headlines</div><div class="rep-val"><ul>'+titles.map(h=>'<li>"'+esc(h[0])+'"</li>').join('')+'</ul></div></div>'+
+        '<div class="rep-row"><div class="rep-lbl">Body length</div><div class="rep-val">'+esc(bodyLen)+'</div></div>'+
+        '<div class="rep-row"><div class="rep-lbl">Tone</div><div class="rep-val">'+tones.map(t=>'<span class="tag">'+esc(t[0])+' ('+t[1]+')</span>').join(' ')+'</div></div>'+
+        '<div class="rep-row"><div class="rep-lbl">Offer angles</div><div class="rep-val">'+(offers.map(o=>'<span class="tag offer">'+esc(o)+'</span>').join(' ')||'<span class="tag">no explicit offer</span>')+'</div></div>'+
+        '<div class="rep-row"><div class="rep-lbl">CTA</div><div class="rep-val">'+esc(cta||'n/a')+'</div></div>'+
+        '<div class="rep-row"><div class="rep-lbl">Targeting</div><div class="rep-val">'+esc(strategy)+' · '+topAuds.map(a=>'<span class="tag">'+esc(a)+'</span>').join(' ')+'</div></div>'+
+        '<div class="rep-row"><div class="rep-lbl">One-shot prompt</div><div class="rep-val"><div class="prompt-box">'+esc(prompt)+'</div></div></div>'+
+      '</div>'+
+      // Asset ranking (if >1 unique asset in cluster)
+      (assets.length > 1 ? renderAssetRanking(assets, metricKey) : '')+
+      '<details style="margin-top:10px"><summary>See all '+members.length+' variants</summary><div class="grid" style="margin-top:10px">'+sortedByMetric.map(m=>adCard(m)).join('')+'</div></details>'+
     '</div>';
   }).join('');
 }
@@ -1541,7 +1610,9 @@ document.addEventListener('click', e=>{
   const wrap = e.target.closest('.vid-wrap');
   if(!wrap || !wrap.dataset.videoSrc) return;
   const src = wrap.dataset.videoSrc;
-  wrap.innerHTML = '<video controls autoplay playsinline preload="metadata" src="'+esc(src)+'" style="width:80px;height:80px;border-radius:6px;object-fit:cover"></video>';
+  // Keep video player sized to the wrap's own dimensions (100px cards, 220px reproduce hero)
+  const dim = wrap.clientWidth || 100;
+  wrap.innerHTML = '<video controls autoplay playsinline preload="metadata" src="'+esc(src)+'" style="width:100%;height:'+dim+'px;border-radius:6px;object-fit:cover;background:#000"></video>';
   wrap.style.cursor = 'default';
 });
 
