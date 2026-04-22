@@ -60,10 +60,31 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .tag.fmt-image{background:#14532d;color:#bbf7d0}
 .cluster-card{background:#101019;border:1px solid #272740;border-radius:12px;padding:16px;margin-bottom:12px}
 .why-winner{background:linear-gradient(135deg,#0f172a,#0a0a13);border:1px solid #1e293b;border-left:3px solid #3b82f6;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:12px}
-.why-winner .why-hdr{color:#fff;font-weight:600;margin-bottom:6px;font-size:12px;letter-spacing:.02em}
+.why-winner .why-hdr{color:#fff;font-weight:600;margin-bottom:8px;font-size:12px;letter-spacing:.02em}
 .why-winner ul{margin:0;padding-left:18px;color:#c7c7d1;line-height:1.6}
 .why-winner li{margin:2px 0}
-.why-winner code{background:#1e3a8a;color:#bfdbfe;padding:1px 6px;border-radius:4px;font-family:'SF Mono',Menlo,monospace;font-size:11px}
+.why-winner code{background:#1e3a8a;color:#bfdbfe;padding:1px 6px;border-radius:4px;font-family:'SF Mono',Menlo,monospace;font-size:10.5px}
+.sig-table{width:100%;border-collapse:collapse;background:transparent;border:none;margin:0;font-size:11.5px}
+.sig-table th{background:transparent;color:#8e8ea0;padding:6px 8px;border-bottom:1px solid #1e293b;text-align:left;font-weight:600;font-size:10px;cursor:default}
+.sig-table th:hover{background:transparent;color:#8e8ea0}
+.sig-table td{padding:6px 8px;border-bottom:1px solid #131320;vertical-align:middle;color:#c7c7d1}
+.sig-table tr:hover td{background:rgba(59,130,246,.05)}
+.sig-table .sig-rank{color:#8e8ea0;font-variant-numeric:tabular-nums;width:32px}
+.sig-table .sig-dim{color:#fff;white-space:nowrap;min-width:140px}
+.sig-table .sig-winner,.sig-table .sig-others{max-width:220px}
+.sig-table .sig-count{color:#6b7280;font-size:10px}
+.sig-table .sig-effect{font-variant-numeric:tabular-nums;text-align:right;font-weight:600;width:52px}
+.sig-table .sig-bar{width:80px}
+.sig-table .bar-bg{height:4px;background:#1a1a2e;border-radius:2px;overflow:hidden}
+.sig-table .bar-fill{height:100%;border-radius:2px;transition:width .2s}
+.sig-table .sig-qual{color:#8e8ea0;text-transform:uppercase;font-size:9px;letter-spacing:.05em}
+.sig-table .sig-row.strong .sig-qual{color:#22c55e}
+.sig-table .sig-row.moderate .sig-qual{color:#fbbf24}
+.sig-table .sig-row.weak .sig-qual{color:#6b7280}
+.sig-more{margin-top:8px}
+.sig-more summary{color:#8e8ea0;font-size:11px;padding:4px 0}
+.sig-more summary:hover{color:#c7c7d1}
+.sig-more .sig-table{margin-top:6px;border-top:1px dashed #1e293b}
 .variant-tag{display:inline-block;background:#1e293b;color:#bfdbfe;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;font-family:'SF Mono',Menlo,monospace;letter-spacing:.02em;margin-right:6px;vertical-align:middle}
 .variant-tag.winner{background:#14532d;color:#bbf7d0}
 .variant-tag.loser{background:#7f1d1d;color:#fecaca}
@@ -262,12 +283,37 @@ function shortTag(dim, val){
     case 'bodyLen': return s.replace(/\s*\(.*$/,'');
     case 'title': return s.length>16 ? s.slice(0,16)+'…' : s;
     case 'offer': return s;
+    case 'asset': return s.length > 8 ? s.slice(0,6)+'…' : s;
+    case 'bodyDigest': return s.length > 20 ? s.slice(0,20)+'…' : s;
+    case 'hook': return s.length > 16 ? s.slice(0,16)+'…' : s;
+    case 'firstWord': return s;
+    case 'firstEmoji': return s;
+    case 'hasEmoji': return s==='true' ? 'emoji' : 'no-emoji';
+    case 'hasHashtag': return s==='true' ? 'hashtag' : 'no-#';
+    case 'isQuestion': return s==='true' ? 'question' : 'statement';
+    case 'numericClaim': return s==='true' ? 'num-claim' : 'no-num';
+    case 'dollarClaim': return s==='true' ? '$-claim' : 'no-$';
+    case 'hasCta': return s==='true' ? 'has-CTA' : 'no-CTA';
+    case 'toneJewish': return s==='true' ? 'Jewish' : '—';
+    case 'toneHype': return s==='true' ? 'Hype' : '—';
+    case 'toneFirstPerson': return s==='true' ? '1st-person' : '—';
+    case 'toneSecondPerson': return s==='true' ? '2nd-person' : '—';
+    case 'toneTestimonial': return s==='true' ? 'Testimonial' : '—';
+    case 'toneCuriosity': return s==='true' ? 'Curiosity' : '—';
+    case 'compliance': return s==='true' ? '⚠flag' : '✓clean';
     default: return s.slice(0,16);
   }
 }
 function dimLabel(d){
   return {cta:'CTA', account:'account', strategy:'targeting strategy', audience:'primary audience',
           month:'month launched', year:'year', season:'season', fmt:'format', bodyLen:'body length',
+          asset:'visual asset', bodyDigest:'body copy variant', hook:'hook opener',
+          firstWord:'first word', firstEmoji:'first emoji',
+          hasEmoji:'emoji usage', hasHashtag:'hashtag usage', isQuestion:'question vs statement',
+          numericClaim:'% claim', dollarClaim:'$ claim', hasCta:'CTA presence',
+          toneJewish:'Jewish-humor tone', toneHype:'hype tone', toneFirstPerson:'first-person voice',
+          toneSecondPerson:'second-person voice', toneTestimonial:'testimonial framing',
+          toneCuriosity:'curiosity hook', compliance:'compliance flags',
           title:'headline', offer:'offer'}[d] || d;
 }
 // Extract a single comparable value from a member along a dimension
@@ -284,10 +330,53 @@ function extractDim(m, dim){
     case 'bodyLen': return (m.patterns && m.patterns.body_len) || '';
     case 'title': return m.title || '';
     case 'offer': return (m.offers && m.offers[0]) || '';
+    // Creative-signal dimensions
+    case 'asset': {
+      // Specific visual asset used — video_id takes priority, else image_hash
+      if (m.video_id) return 'vid:'+String(m.video_id).slice(0,8);
+      if (m.image_hash) return 'img:'+String(m.image_hash).slice(0,8);
+      return '';
+    }
+    case 'bodyDigest': {
+      // Normalize body for comparison — collapse whitespace, lowercase, take first 40 chars
+      const b = (m.body||'').replace(/\s+/g,' ').trim().toLowerCase();
+      return b.slice(0,40);
+    }
+    case 'hook': return (m.patterns && m.patterns.hook) || '';
+    case 'firstWord': {
+      const w = (m.body||'').trim().split(/\s+/)[0] || '';
+      return w.replace(/[^\w'-]/g,'').toLowerCase();
+    }
+    case 'firstEmoji': {
+      const match = (m.body||'').match(/[\u{1F300}-\u{1FAFF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{2700}-\u{27BF}\u{2600}-\u{26FF}\u{1F900}-\u{1F9FF}]/u);
+      return match ? match[0] : '';
+    }
+    case 'hasEmoji': return String(!!(m.patterns && m.patterns.has_emoji));
+    case 'hasHashtag': return String(!!(m.patterns && m.patterns.has_hashtag));
+    case 'isQuestion': return String(!!(m.patterns && m.patterns.is_question));
+    case 'numericClaim': return String(/\b\d{1,3}\s*%/.test(m.body||'') || /\b\d{1,3}\s*%/.test(m.title||''));
+    case 'dollarClaim': return String(/\$\d/.test(m.body||'') || /\$\d/.test(m.title||''));
+    case 'hasCta': return String(!!m.cta);
+    case 'toneJewish': return String(!!(m.patterns && (m.patterns.tone||[]).includes('Jewish-humor')));
+    case 'toneHype': return String(!!(m.patterns && (m.patterns.tone||[]).includes('Hype')));
+    case 'toneFirstPerson': return String(!!(m.patterns && (m.patterns.tone||[]).includes('First-person')));
+    case 'toneSecondPerson': return String(!!(m.patterns && (m.patterns.tone||[]).includes('Second-person')));
+    case 'toneTestimonial': return String(!!(m.patterns && (m.patterns.tone||[]).includes('Testimonial')));
+    case 'toneCuriosity': return String(!!(m.patterns && (m.patterns.tone||[]).includes('Curiosity-hook')));
+    case 'compliance': return String(!!(m.compliance && m.compliance.length));
     default: return '';
   }
 }
-const ANALYZE_DIMS = ['cta','audience','strategy','account','month','title','bodyLen','offer'];
+// Full signal suite — creative + targeting + time dimensions
+const ANALYZE_DIMS = [
+  'asset','bodyDigest','hook','title','firstWord','firstEmoji',
+  'bodyLen','hasEmoji','hasHashtag','isQuestion','numericClaim','dollarClaim',
+  'toneJewish','toneHype','toneFirstPerson','toneSecondPerson','toneTestimonial','toneCuriosity',
+  'cta','hasCta','offer','compliance',
+  'audience','strategy','account','fmt','month','season'
+];
+// Label priority for variant naming (pick the most distinctive)
+const LABEL_DIM_PRIORITY = ['cta','audience','strategy','account','title','hook','offer','month','firstEmoji','bodyLen'];
 // Analyze a cluster: build variant labels + drivers of why best won
 function analyzeVariants(members, metricKey){
   const def = METRIC_DEFS[metricKey];
@@ -305,10 +394,12 @@ function analyzeVariants(members, metricKey){
   });
   // Letter labels: A=best, B=2nd, ...
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  // Pick up to 3 most-distinctive label dims for variant naming
+  const labelDims = LABEL_DIM_PRIORITY.filter(d=>varying.includes(d)).slice(0,3);
   const labelFor = {};
   sorted.forEach((m,i)=>{
     const letter = i<26 ? letters[i] : 'V'+(i+1);
-    const tags = varying.slice(0,3).map(d=>shortTag(d, extractDim(m,d))).filter(Boolean);
+    const tags = labelDims.map(d=>shortTag(d, extractDim(m,d))).filter(Boolean);
     labelFor[m.id] = tags.length ? letter+' · '+tags.join(' · ') : letter;
   });
   // Per-dimension: what value did winner use, and how much "better" is that value vs alternatives?
@@ -316,7 +407,7 @@ function analyzeVariants(members, metricKey){
   const drivers = [];
   varying.forEach(dim=>{
     const winnerVal = extractDim(winner, dim);
-    if(!winnerVal) return;
+    if(winnerVal==='' && dim!=='hasEmoji' && dim!=='hasHashtag' && dim!=='isQuestion' && dim!=='numericClaim' && dim!=='dollarClaim' && dim!=='hasCta' && dim!=='compliance' && !dim.startsWith('tone')) return;
     const mine = members.filter(m=>extractDim(m,dim)===winnerVal);
     const others = members.filter(m=>extractDim(m,dim)!==winnerVal);
     if(!others.length || !mine.length) return;
@@ -331,25 +422,56 @@ function analyzeVariants(members, metricKey){
     drivers.push({
       dim, winnerVal,
       othersVals: Array.from(new Set(others.map(m=>extractDim(m,dim)).filter(Boolean))).slice(0,3),
-      mineAvg, othAvg,
+      mineAvg, othAvg, mineCount: mine.length, otherCount: others.length,
       delta: rawDelta,
     });
   });
   drivers.sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta));
-  return {winner, loser: sorted[sorted.length-1], sorted, labelFor, varying, drivers};
+  return {winner, loser: sorted[sorted.length-1], sorted, labelFor, varying, drivers, labelDims};
 }
 function renderWhyWinner(analysis, metricKey){
   const def = METRIC_DEFS[metricKey];
   if(!analysis.drivers.length) return '<div class="section-desc" style="margin:8px 0">Variants are essentially identical on measurable dimensions — winner likely due to timing, random variance, or audience saturation.</div>';
-  const lines = analysis.drivers.slice(0,3).map(d=>{
+
+  // Split drivers into creative signals (what's IN the ad) vs context (targeting/time/account)
+  const CREATIVE_DIMS = new Set(['asset','bodyDigest','hook','title','firstWord','firstEmoji',
+    'bodyLen','hasEmoji','hasHashtag','isQuestion','numericClaim','dollarClaim','cta','hasCta','offer','compliance','fmt',
+    'toneJewish','toneHype','toneFirstPerson','toneSecondPerson','toneTestimonial','toneCuriosity']);
+
+  // Max |delta| in this cluster — for strength-bar scaling
+  const maxDelta = Math.max(0.01, ...analysis.drivers.map(d=>Math.abs(d.delta)));
+
+  const rowFor = (d, idx)=>{
     const pct = Math.abs(d.delta*100);
     const sign = d.delta>=0 ? '+' : '−';
-    const qualifier = Math.abs(d.delta) >= 0.2 ? 'strongly' : (Math.abs(d.delta) >= 0.05 ? 'moderately' : 'mildly');
-    const direction = def.higherBetter ? (d.delta>=0?'higher':'lower') : (d.delta>=0?'lower':'higher');
-    const othersTxt = d.othersVals.length ? ' (vs '+d.othersVals.map(v=>'<code>'+esc(shortTag(d.dim,v))+'</code>').join(', ')+')' : '';
-    return '<li>'+qualifier+' '+direction+' '+def.label+': <b>'+esc(dimLabel(d.dim))+'</b> = <code>'+esc(shortTag(d.dim, d.winnerVal))+'</code>'+othersTxt+' · '+sign+pct.toFixed(0)+'% vs alternatives</li>';
-  }).join('');
-  return '<div class="why-winner"><div class="why-hdr">Why winner won · optimizing for '+def.label+'</div><ul>'+lines+'</ul></div>';
+    const qualifier = Math.abs(d.delta) >= 0.2 ? 'strong' : (Math.abs(d.delta) >= 0.05 ? 'moderate' : 'weak');
+    const direction = def.higherBetter ? (d.delta>=0?'↑ better':'↓ worse') : (d.delta>=0?'↓ better (lower)':'↑ worse (higher)');
+    const othersTxt = d.othersVals.length ? d.othersVals.map(v=>'<code>'+esc(shortTag(d.dim,v))+'</code>').join(', ') : '—';
+    const barW = Math.round(Math.abs(d.delta)/maxDelta * 100);
+    const barColor = d.delta>=0 ? '#22c55e' : '#ef4444';
+    return '<tr class="sig-row '+qualifier+'">'+
+      '<td class="sig-rank">#'+(idx+1)+'</td>'+
+      '<td class="sig-dim">'+(CREATIVE_DIMS.has(d.dim)?'🎨 ':'🎯 ')+esc(dimLabel(d.dim))+'</td>'+
+      '<td class="sig-winner"><code>'+esc(shortTag(d.dim, d.winnerVal))+'</code> <span class="sig-count">×'+d.mineCount+'</span></td>'+
+      '<td class="sig-others">'+othersTxt+' <span class="sig-count">×'+d.otherCount+'</span></td>'+
+      '<td class="sig-effect" style="color:'+barColor+'">'+sign+pct.toFixed(0)+'%</td>'+
+      '<td class="sig-bar"><div class="bar-bg"><div class="bar-fill" style="width:'+barW+'%;background:'+barColor+'"></div></div></td>'+
+      '<td class="sig-qual">'+qualifier+'</td>'+
+    '</tr>';
+  };
+
+  // Show top 4 inline + rest in expandable
+  const top = analysis.drivers.slice(0, 4);
+  const rest = analysis.drivers.slice(4);
+  const topRows = top.map(rowFor).join('');
+  const restRows = rest.map((d,i)=>rowFor(d, i+4)).join('');
+
+  return '<div class="why-winner">'+
+    '<div class="why-hdr">🧪 Signal ranking · which attributes drove winner to best '+def.label+'</div>'+
+    '<table class="sig-table"><thead><tr><th>#</th><th>Signal</th><th>Winner uses</th><th>Others use</th><th class="num">Effect</th><th>Strength</th><th>Qualifier</th></tr></thead>'+
+    '<tbody>'+topRows+'</tbody>'+
+    (rest.length ? '</table><details class="sig-more"><summary>Show all '+analysis.drivers.length+' signals (including weak ones)</summary><table class="sig-table"><tbody>'+restRows+'</tbody></table></details>' : '</table>')+
+  '</div>';
 }
 function sortRows(rows, m){
   const asc = (m==='cpp' || m==='cpm');
