@@ -178,7 +178,7 @@ summary:hover{color:#c7c7d1}
 </div>
 
 <div class="pane" id="pane-reproduce">
-  <div class="section-hdr">Reproduce-this cards<div class="section-ctl">Optimize for <select id="repro-opt"><option value="roas">ROAS (maximize)</option><option value="cpp">CPP (minimize)</option><option value="ctr">CTR (maximize)</option><option value="compliance">Compliance-safe + profitable</option></select> · Min spend <select id="repro-min"><option value="100">$100</option><option value="250">$250</option><option value="500" selected>$500</option><option value="1000">$1,000</option><option value="2500">$2,500</option><option value="5000">$5,000</option></select></div></div>
+  <div class="section-hdr">Reproduce-this cards<div class="section-ctl">Optimize for <select id="repro-opt"><option value="roas">ROAS (maximize)</option><option value="cpp">CPP (minimize)</option><option value="ctr">CTR (maximize)</option><option value="compliance">Compliance-safe + profitable</option></select> · Min spend <select id="repro-min"><option value="50">$50</option><option value="100">$100</option><option value="250">$250</option><option value="500" selected>$500</option><option value="1000">$1,000</option><option value="2500">$2,500</option><option value="5000">$5,000</option></select> · Show <select id="repro-count"><option value="10">10</option><option value="20" selected>20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option></select></div></div>
   <div class="section-desc">Every card below is a live recommendation derived from your filtered data and the chosen optimization target. Each card explains why it was picked so you can prioritize action.</div>
   <div id="reproduce-out"></div>
 </div>
@@ -865,9 +865,11 @@ function renderReproduce(){
   const byId = Object.fromEntries(f.map(a=>[a.id, a]));
 
   // Build per-cluster aggregates from filtered ads
+  const inCluster = new Set();
   let clusterStats = CLUSTERS.map(c=>{
     const members = c.members.map(id=>byId[id]).filter(Boolean);
     if(!members.length) return null;
+    members.forEach(m=>inCluster.add(m.id));
     const spend = members.reduce((s,m)=>s+m.spend,0);
     const rev = members.reduce((s,m)=>s+m.revenue,0);
     const purch = members.reduce((s,m)=>s+m.purchases,0);
@@ -882,28 +884,52 @@ function renderReproduce(){
       cpm: imps ? spend/imps*1000 : 0,
       flag_count: flagCount,
       flag_rate: members.length ? flagCount/members.length : 0,
+      is_solo: false,
     });
-  }).filter(Boolean).filter(c=>c.spend >= minSpend);
+  }).filter(Boolean);
+
+  // Add solo units for ads not in any cluster — every filtered ad gets a chance
+  f.filter(a=>!inCluster.has(a.id)).forEach(a=>{
+    const flagCount = (a.compliance||[]).length;
+    clusterStats.push({
+      cluster_id: 'solo-'+a.id.slice(-6),
+      size: 1,
+      members: [a],
+      fmt: a.fmt,
+      hook: a.patterns.hook || '',
+      first_seen: a.created, last_seen: a.created,
+      spend: a.spend, revenue: a.revenue, purchases: a.purchases,
+      impressions: a.impressions, clicks: a.clicks,
+      roas: a.roas, cpp: a.purchases?a.spend/a.purchases:Infinity,
+      ctr: a.ctr, cpm: a.cpm,
+      flag_count: flagCount, flag_rate: flagCount?1:0,
+      is_solo: true,
+    });
+  });
+
+  clusterStats = clusterStats.filter(c=>c.spend >= minSpend);
 
   // Sort + explain reason
   let reasonLbl;
+  const unit = c => c.members.length===1 ? 'solo ad' : c.members.length+' variants';
   if(optFor==='roas'){
     clusterStats.sort((a,b)=>b.roas-a.roas);
-    reasonLbl = c=>'<b>Why picked:</b> ranks #'+(c._rank)+' by ROAS at '+fmtRoas(c.roas)+' on '+fmtMoney(c.spend)+' spend, across '+c.members.length+' variants. '+fmtNum(c.purchases)+' purchases · CPP '+(isFinite(c.cpp)?fmtMoney(c.cpp):'—')+'.';
+    reasonLbl = c=>'<b>Why picked:</b> ranks #'+(c._rank)+' by ROAS at '+fmtRoas(c.roas)+' on '+fmtMoney(c.spend)+' spend, across '+unit(c)+'. '+fmtNum(c.purchases)+' purchases · CPP '+(isFinite(c.cpp)?fmtMoney(c.cpp):'—')+'.';
   } else if(optFor==='cpp'){
     clusterStats = clusterStats.filter(c=>c.purchases>0);
     clusterStats.sort((a,b)=>a.cpp-b.cpp);
-    reasonLbl = c=>'<b>Why picked:</b> ranks #'+(c._rank)+' by lowest CPP at '+fmtMoney(c.cpp)+' per purchase, on '+fmtMoney(c.spend)+' spend and '+c.purchases+' purchases. ROAS '+fmtRoas(c.roas)+'.';
+    reasonLbl = c=>'<b>Why picked:</b> ranks #'+(c._rank)+' by lowest CPP at '+fmtMoney(c.cpp)+' per purchase, on '+fmtMoney(c.spend)+' spend and '+c.purchases+' purchases ('+unit(c)+'). ROAS '+fmtRoas(c.roas)+'.';
   } else if(optFor==='ctr'){
     clusterStats.sort((a,b)=>b.ctr-a.ctr);
-    reasonLbl = c=>'<b>Why picked:</b> ranks #'+(c._rank)+' by CTR at '+c.ctr.toFixed(2)+'% on '+fmtMoney(c.spend)+' spend. ROAS '+fmtRoas(c.roas)+' · '+fmtNum(c.purchases)+' purchases.';
+    reasonLbl = c=>'<b>Why picked:</b> ranks #'+(c._rank)+' by CTR at '+c.ctr.toFixed(2)+'% on '+fmtMoney(c.spend)+' spend ('+unit(c)+'). ROAS '+fmtRoas(c.roas)+' · '+fmtNum(c.purchases)+' purchases.';
   } else if(optFor==='compliance'){
     clusterStats = clusterStats.filter(c=>c.flag_rate===0);
     clusterStats.sort((a,b)=>b.roas-a.roas);
-    reasonLbl = c=>'<b>Why picked:</b> compliance-safe (zero flags across '+c.members.length+' variants) and profitable — '+fmtRoas(c.roas)+' ROAS on '+fmtMoney(c.spend)+'. Low regulatory risk, scale confidently.';
+    reasonLbl = c=>'<b>Why picked:</b> compliance-safe (zero flags · '+unit(c)+') and profitable — '+fmtRoas(c.roas)+' ROAS on '+fmtMoney(c.spend)+'. Low regulatory risk, scale confidently.';
   }
 
-  clusterStats = clusterStats.slice(0, 12);
+  const showCount = +(state.reproCount || 20);
+  clusterStats = clusterStats.slice(0, showCount);
   clusterStats.forEach((c,i)=>c._rank = i+1);
 
   if(!clusterStats.length){
@@ -953,7 +979,7 @@ function renderReproduce(){
 
     return '<div class="reproduce" data-cluster-id="'+esc(c.cluster_id)+'">'+
       '<div class="cluster-hdr"><div>'+
-        '<div class="cluster-title">#'+c._rank+' · '+esc(c.cluster_id)+' · '+c.members.length+' variants · '+fmtDominant+'</div>'+
+        '<div class="cluster-title">#'+c._rank+' · '+esc(c.cluster_id)+' · '+(c.is_solo?'solo ad':c.members.length+' variants')+' · '+fmtDominant+'</div>'+
         '<div class="cluster-stats"><span>'+fmtMoney(c.spend)+' spend</span><span>'+fmtRoas(c.roas)+' ROAS</span><span>'+fmtNum(c.purchases)+' purch</span><span>CPP '+(isFinite(c.cpp)?fmtMoney(c.cpp):'—')+'</span><span>CTR '+c.ctr.toFixed(2)+'%</span><span>'+esc(firstSeen)+' → '+esc(lastSeen)+'</span>'+(c.flag_count?'<span class="tag flag">⚠ '+c.flag_count+' flag'+(c.flag_count>1?'s':'')+'</span>':'<span class="tag" style="background:#14532d;color:#bbf7d0">✓ no flags</span>')+'</div>'+
       '</div>'+winnerThumb+'</div>'+
       '<div class="insight win" style="margin:10px 0 6px">'+reasonLbl(c)+'</div>'+
@@ -1040,6 +1066,7 @@ bindSort('ads-sort', 'ads', renderAds);
 // Reproduce-tab controls
 document.getElementById('repro-opt').addEventListener('change', e=>{state.reproOpt = e.target.value; renderReproduce();});
 document.getElementById('repro-min').addEventListener('change', e=>{state.reproMin = +e.target.value; renderReproduce();});
+document.getElementById('repro-count').addEventListener('change', e=>{state.reproCount = +e.target.value; renderReproduce();});
 
 // Summary leaderboard metric selector + action-list expansion
 document.getElementById('summary-out').addEventListener('change', e=>{
