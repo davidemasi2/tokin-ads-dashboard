@@ -178,8 +178,8 @@ summary:hover{color:#c7c7d1}
 </div>
 
 <div class="pane" id="pane-reproduce">
-  <div class="section-hdr">Reproduce-this cards</div>
-  <div class="section-desc">Ready-to-execute creative briefs derived from your top-spending clusters. Hand these to your creative team or paste into an AI generator.</div>
+  <div class="section-hdr">Reproduce-this cards<div class="section-ctl">Optimize for <select id="repro-opt"><option value="roas">ROAS (maximize)</option><option value="cpp">CPP (minimize)</option><option value="ctr">CTR (maximize)</option><option value="compliance">Compliance-safe + profitable</option></select> · Min spend <select id="repro-min"><option value="100">$100</option><option value="250">$250</option><option value="500" selected>$500</option><option value="1000">$1,000</option><option value="2500">$2,500</option><option value="5000">$5,000</option></select></div></div>
+  <div class="section-desc">Every card below is a live recommendation derived from your filtered data and the chosen optimization target. Each card explains why it was picked so you can prioritize action.</div>
   <div id="reproduce-out"></div>
 </div>
 
@@ -207,6 +207,7 @@ const SPEND_STOPS = [0, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 2500
 const state = {
   year:'All', account:'All', fmt:'All', tier:'All', offer:'All', search:'', minSpend:0,
   sumMetric: 'roas',
+  reproOpt: 'roas', reproMin: 500,
   sort: {cluster:'spend-desc', tier:'spend-desc', comp:'spend-desc', ads:'spend-desc'}
 };
 function sortRows(rows, m){
@@ -855,34 +856,118 @@ function renderCompliance(){
 }
 
 // ============================================================
-// REPRODUCE TAB (static, global)
+// REPRODUCE TAB — reactive to filter + optimize selector + min-spend
 // ============================================================
 function renderReproduce(){
-  document.getElementById('reproduce-out').innerHTML = REPRODUCE.map(r=>{
-    const thumb = thumbSrc(r.winner_ad) ? '<img src="'+esc(thumbSrc(r.winner_ad))+'" style="width:100%;max-width:160px;border-radius:6px">' : '';
-    const prompt = 'Create a '+r.format+' ad in the "'+ (r.tones.map(t=>t[0]).join(', ')||'standard') +'" style. '+
-      'Hook with: "'+(r.hook_formulas[0]||'')+'...". '+
-      'Body length: '+r.body_len+'. '+
-      'Headline idea: "'+(r.headlines[0]||'')+'". '+
-      'CTA: '+r.cta+'. '+
-      'Offer angle: '+(r.offer_angles.join(' or ')||'no explicit offer, brand-led')+'. '+
-      'Target audience strategy: '+r.targeting+' — top audiences: '+(r.top_audiences.join(', ')||'broad')+'.';
-    return '<div class="reproduce">'+
+  const optFor = state.reproOpt || 'roas';
+  const minSpend = +(state.reproMin || 500);
+  const f = filterAds();
+  const byId = Object.fromEntries(f.map(a=>[a.id, a]));
+
+  // Build per-cluster aggregates from filtered ads
+  let clusterStats = CLUSTERS.map(c=>{
+    const members = c.members.map(id=>byId[id]).filter(Boolean);
+    if(!members.length) return null;
+    const spend = members.reduce((s,m)=>s+m.spend,0);
+    const rev = members.reduce((s,m)=>s+m.revenue,0);
+    const purch = members.reduce((s,m)=>s+m.purchases,0);
+    const imps = members.reduce((s,m)=>s+m.impressions,0);
+    const clicks = members.reduce((s,m)=>s+m.clicks,0);
+    const flagCount = members.reduce((s,m)=>s+(m.compliance||[]).length,0);
+    return Object.assign({}, c, {
+      members, spend, revenue:rev, purchases:purch, impressions:imps, clicks,
+      roas: spend ? rev/spend : 0,
+      cpp: purch ? spend/purch : Infinity,
+      ctr: imps ? clicks/imps*100 : 0,
+      cpm: imps ? spend/imps*1000 : 0,
+      flag_count: flagCount,
+      flag_rate: members.length ? flagCount/members.length : 0,
+    });
+  }).filter(Boolean).filter(c=>c.spend >= minSpend);
+
+  // Sort + explain reason
+  let reasonLbl;
+  if(optFor==='roas'){
+    clusterStats.sort((a,b)=>b.roas-a.roas);
+    reasonLbl = c=>'<b>Why picked:</b> ranks #'+(c._rank)+' by ROAS at '+fmtRoas(c.roas)+' on '+fmtMoney(c.spend)+' spend, across '+c.members.length+' variants. '+fmtNum(c.purchases)+' purchases · CPP '+(isFinite(c.cpp)?fmtMoney(c.cpp):'—')+'.';
+  } else if(optFor==='cpp'){
+    clusterStats = clusterStats.filter(c=>c.purchases>0);
+    clusterStats.sort((a,b)=>a.cpp-b.cpp);
+    reasonLbl = c=>'<b>Why picked:</b> ranks #'+(c._rank)+' by lowest CPP at '+fmtMoney(c.cpp)+' per purchase, on '+fmtMoney(c.spend)+' spend and '+c.purchases+' purchases. ROAS '+fmtRoas(c.roas)+'.';
+  } else if(optFor==='ctr'){
+    clusterStats.sort((a,b)=>b.ctr-a.ctr);
+    reasonLbl = c=>'<b>Why picked:</b> ranks #'+(c._rank)+' by CTR at '+c.ctr.toFixed(2)+'% on '+fmtMoney(c.spend)+' spend. ROAS '+fmtRoas(c.roas)+' · '+fmtNum(c.purchases)+' purchases.';
+  } else if(optFor==='compliance'){
+    clusterStats = clusterStats.filter(c=>c.flag_rate===0);
+    clusterStats.sort((a,b)=>b.roas-a.roas);
+    reasonLbl = c=>'<b>Why picked:</b> compliance-safe (zero flags across '+c.members.length+' variants) and profitable — '+fmtRoas(c.roas)+' ROAS on '+fmtMoney(c.spend)+'. Low regulatory risk, scale confidently.';
+  }
+
+  clusterStats = clusterStats.slice(0, 12);
+  clusterStats.forEach((c,i)=>c._rank = i+1);
+
+  if(!clusterStats.length){
+    document.getElementById('reproduce-out').innerHTML = '<div class="section-desc">No clusters match criteria (min spend '+fmtMoney(minSpend)+'). Try lowering the min spend or broadening filters.</div>';
+    return;
+  }
+
+  document.getElementById('reproduce-out').innerHTML = clusterStats.map(c=>{
+    // Extract creative recipe from members
+    const members = c.members;
+    const winner = members.reduce((a,b)=>a.roas>b.roas?a:b);
+    const hookCounts = {}, titleCounts = {}, toneCounts = {}, lengthCounts = {}, offerCounts = {}, ctaCounts = {}, audCounts = {}, stratCounts = {};
+    members.forEach(m=>{
+      if(m.patterns.hook) hookCounts[m.patterns.hook] = (hookCounts[m.patterns.hook]||0)+1;
+      if(m.title) titleCounts[m.title] = (titleCounts[m.title]||0)+1;
+      (m.patterns.tone||[]).forEach(t=>toneCounts[t] = (toneCounts[t]||0)+1);
+      if(m.patterns.body_len) lengthCounts[m.patterns.body_len] = (lengthCounts[m.patterns.body_len]||0)+1;
+      (m.offers||[]).forEach(o=>offerCounts[o] = (offerCounts[o]||0)+1);
+      if(m.cta) ctaCounts[m.cta] = (ctaCounts[m.cta]||0)+1;
+      if(m.targeting){
+        if(m.targeting.strategy) stratCounts[m.targeting.strategy] = (stratCounts[m.targeting.strategy]||0)+1;
+        (m.targeting.audiences||[]).forEach(a=>audCounts[a] = (audCounts[a]||0)+1);
+      }
+    });
+    const topN = (obj,n)=>Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,n);
+    const hooks = topN(hookCounts, 3);
+    const titles = topN(titleCounts, 3);
+    const tones = topN(toneCounts, 3);
+    const bodyLen = topN(lengthCounts, 1)[0]?.[0] || '';
+    const offers = topN(offerCounts, 3).map(x=>x[0]);
+    const cta = topN(ctaCounts, 1)[0]?.[0] || '';
+    const strategy = topN(stratCounts, 1)[0]?.[0] || '';
+    const topAuds = topN(audCounts, 4).map(x=>x[0]);
+    const fmtDominant = (()=>{const fc={};members.forEach(m=>{fc[m.fmt]=(fc[m.fmt]||0)+1});return topN(fc,1)[0]?.[0] || c.fmt || '';})();
+    const winnerThumb = thumbSrc(winner) ? '<img src="'+esc(thumbSrc(winner))+'" style="width:100%;max-width:160px;border-radius:6px">' : '';
+    const dateRange = (members.map(m=>m.created).filter(Boolean).sort());
+    const firstSeen = dateRange[0] || '';
+    const lastSeen = dateRange[dateRange.length-1] || '';
+
+    const prompt = 'Create a '+fmtDominant+' ad in the "'+(tones.map(t=>t[0]).join(', ')||'standard')+'" style. '+
+      'Hook with: "'+(hooks[0]?.[0]||'')+'...". '+
+      'Body length: '+bodyLen+'. '+
+      'Headline idea: "'+(titles[0]?.[0]||'')+'". '+
+      'CTA: '+cta+'. '+
+      'Offer angle: '+(offers.join(' or ')||'no explicit offer, brand-led')+'. '+
+      'Target audience strategy: '+strategy+' — top audiences: '+(topAuds.join(', ')||'broad')+'.';
+
+    return '<div class="reproduce" data-cluster-id="'+esc(c.cluster_id)+'">'+
       '<div class="cluster-hdr"><div>'+
-        '<div class="cluster-title">'+esc(r.cluster_id)+' · '+r.size+' variants · '+fmtMoney(r.spend)+' spend · '+fmtRoas(r.roas)+' ROAS</div>'+
-        '<div class="cluster-stats"><span>Ran '+esc(r.first_seen||'')+' → '+esc(r.last_seen||'')+'</span><span>'+fmtNum(r.purchases)+' purchases</span></div>'+
-      '</div>'+thumb+'</div>'+
-      '<div class="rep-row"><div class="rep-lbl">Format</div><div class="rep-val">'+esc(r.format)+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Hook formulas</div><div class="rep-val"><ul>'+r.hook_formulas.map(h=>'<li>"'+esc(h)+'..."</li>').join('')+'</ul></div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Winning headlines</div><div class="rep-val"><ul>'+r.headlines.map(h=>'<li>"'+esc(h)+'"</li>').join('')+'</ul></div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Body length</div><div class="rep-val">'+esc(r.body_len)+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Tone</div><div class="rep-val">'+r.tones.map(t=>'<span class="tag">'+esc(t[0])+' ('+t[1]+')</span>').join(' ')+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Offer angles</div><div class="rep-val">'+(r.offer_angles.map(o=>'<span class="tag offer">'+esc(o)+'</span>').join(' ')||'<span class="tag">no explicit offer</span>')+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">CTA</div><div class="rep-val">'+esc(r.cta||'n/a')+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Targeting</div><div class="rep-val">'+esc(r.targeting)+' · '+r.top_audiences.map(a=>'<span class="tag">'+esc(a)+'</span>').join(' ')+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">CPP</div><div class="rep-val">'+(r.purchases?fmtMoney(r.spend/r.purchases):'—')+'</div></div>'+
-      '<div class="rep-row"><div class="rep-lbl">Top winner</div><div class="rep-val">'+esc(r.winner_ad.name)+'</div></div>'+
+        '<div class="cluster-title">#'+c._rank+' · '+esc(c.cluster_id)+' · '+c.members.length+' variants · '+fmtDominant+'</div>'+
+        '<div class="cluster-stats"><span>'+fmtMoney(c.spend)+' spend</span><span>'+fmtRoas(c.roas)+' ROAS</span><span>'+fmtNum(c.purchases)+' purch</span><span>CPP '+(isFinite(c.cpp)?fmtMoney(c.cpp):'—')+'</span><span>CTR '+c.ctr.toFixed(2)+'%</span><span>'+esc(firstSeen)+' → '+esc(lastSeen)+'</span>'+(c.flag_count?'<span class="tag flag">⚠ '+c.flag_count+' flag'+(c.flag_count>1?'s':'')+'</span>':'<span class="tag" style="background:#14532d;color:#bbf7d0">✓ no flags</span>')+'</div>'+
+      '</div>'+winnerThumb+'</div>'+
+      '<div class="insight win" style="margin:10px 0 6px">'+reasonLbl(c)+'</div>'+
+      '<div class="rep-row"><div class="rep-lbl">Format</div><div class="rep-val">'+esc(fmtDominant)+'</div></div>'+
+      '<div class="rep-row"><div class="rep-lbl">Hook formulas</div><div class="rep-val"><ul>'+hooks.map(h=>'<li>"'+esc(h[0])+'..." ('+h[1]+' variants)</li>').join('')+'</ul></div></div>'+
+      '<div class="rep-row"><div class="rep-lbl">Winning headlines</div><div class="rep-val"><ul>'+titles.map(h=>'<li>"'+esc(h[0])+'"</li>').join('')+'</ul></div></div>'+
+      '<div class="rep-row"><div class="rep-lbl">Body length</div><div class="rep-val">'+esc(bodyLen)+'</div></div>'+
+      '<div class="rep-row"><div class="rep-lbl">Tone</div><div class="rep-val">'+tones.map(t=>'<span class="tag">'+esc(t[0])+' ('+t[1]+')</span>').join(' ')+'</div></div>'+
+      '<div class="rep-row"><div class="rep-lbl">Offer angles</div><div class="rep-val">'+(offers.map(o=>'<span class="tag offer">'+esc(o)+'</span>').join(' ')||'<span class="tag">no explicit offer</span>')+'</div></div>'+
+      '<div class="rep-row"><div class="rep-lbl">CTA</div><div class="rep-val">'+esc(cta||'n/a')+'</div></div>'+
+      '<div class="rep-row"><div class="rep-lbl">Targeting</div><div class="rep-val">'+esc(strategy)+' · '+topAuds.map(a=>'<span class="tag">'+esc(a)+'</span>').join(' ')+'</div></div>'+
+      '<div class="rep-row"><div class="rep-lbl">Top winner</div><div class="rep-val">'+esc(winner.name)+' · '+fmtMoney(winner.spend)+' · '+fmtRoas(winner.roas)+'</div></div>'+
       '<div class="rep-row"><div class="rep-lbl">One-shot prompt</div><div class="rep-val"><div class="prompt-box">'+esc(prompt)+'</div></div></div>'+
+      '<details style="margin-top:10px"><summary>See all '+members.length+' variants</summary><div class="grid" style="margin-top:10px">'+members.slice().sort((a,b)=>b.spend-a.spend).map(m=>adCard(m)).join('')+'</div></details>'+
     '</div>';
   }).join('');
 }
@@ -951,6 +1036,10 @@ bindSort('cluster-sort', 'cluster', renderClusters);
 bindSort('tier-sort', 'tier', ()=>{renderTiers(); renderClusters();});
 bindSort('comp-sort', 'comp', renderCompliance);
 bindSort('ads-sort', 'ads', renderAds);
+
+// Reproduce-tab controls
+document.getElementById('repro-opt').addEventListener('change', e=>{state.reproOpt = e.target.value; renderReproduce();});
+document.getElementById('repro-min').addEventListener('change', e=>{state.reproMin = +e.target.value; renderReproduce();});
 
 // Summary leaderboard metric selector + action-list expansion
 document.getElementById('summary-out').addEventListener('change', e=>{
