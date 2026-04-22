@@ -92,6 +92,31 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .member-thumb-wrap .v-label{position:absolute;top:2px;left:2px;background:rgba(15,23,42,.85);color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;font-family:'SF Mono',Menlo,monospace}
 .member-thumb-wrap.winner .v-label{background:#14532d;color:#bbf7d0}
 .member-thumb-wrap.loser .v-label{background:#7f1d1d;color:#fecaca}
+/* Asset ranking grid */
+.asset-rank{margin:12px 0}
+.asset-rank-hdr{font-size:12px;color:#fff;font-weight:600;margin-bottom:8px;letter-spacing:.02em;display:flex;justify-content:space-between;align-items:center}
+.asset-rank-hdr .sub{color:#8e8ea0;font-size:11px;font-weight:400}
+.asset-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.asset-card{background:#0a0a13;border:1px solid #272740;border-radius:8px;padding:10px;position:relative;transition:border-color .15s}
+.asset-card:hover{border-color:#3b82f6}
+.asset-card.rank-1{border-color:#22c55e}
+.asset-card.rank-last{border-color:#ef4444;opacity:.85}
+.asset-card .asset-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:6px}
+.asset-card .asset-letter{background:#1e293b;color:#bfdbfe;font-weight:700;font-size:11px;padding:3px 8px;border-radius:4px;font-family:'SF Mono',Menlo,monospace;letter-spacing:.02em}
+.asset-card.rank-1 .asset-letter{background:#14532d;color:#bbf7d0}
+.asset-card.rank-last .asset-letter{background:#7f1d1d;color:#fecaca}
+.asset-card .asset-rank-pos{color:#8e8ea0;font-size:10px;font-variant-numeric:tabular-nums}
+.asset-card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;background:#151524;display:block;cursor:pointer}
+.asset-card .asset-no-thumb{width:100%;aspect-ratio:1;background:linear-gradient(135deg,#1a1a2e,#151524);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#8e8ea0;font-size:11px}
+.asset-card .asset-metrics{margin-top:8px;font-size:11px;display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;line-height:1.4}
+.asset-card .asset-metrics .m-label{color:#8e8ea0;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+.asset-card .asset-metrics .m-value{color:#fff;font-variant-numeric:tabular-nums;font-weight:500}
+.asset-card .asset-metrics .m-value.primary{color:#22c55e;font-size:14px}
+.asset-card .asset-readout{font-size:11px;color:#c7c7d1;margin-top:6px;padding-top:6px;border-top:1px dashed #1f1f2e;line-height:1.45}
+.asset-card .asset-readout b{color:#fff}
+.asset-card .asset-readout .delta-pos{color:#22c55e}
+.asset-card .asset-readout .delta-neg{color:#ef4444}
+.asset-card .asset-var-count{color:#8e8ea0;font-size:10px;margin-top:4px}
 .cluster-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}
 .cluster-title{font-size:15px;font-weight:600;color:#fff}
 .cluster-stats{font-size:12px;color:#8e8ea0;display:flex;gap:12px;margin-top:4px;flex-wrap:wrap}
@@ -429,6 +454,113 @@ function analyzeVariants(members, metricKey){
   drivers.sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta));
   return {winner, loser: sorted[sorted.length-1], sorted, labelFor, varying, drivers, labelDims};
 }
+// Group cluster members by specific asset (video_id > image_hash > unique ad_id fallback)
+// and produce a ranked per-asset performance breakdown.
+function buildAssetRanking(members, metricKey){
+  const def = METRIC_DEFS[metricKey];
+  const groups = new Map();
+  members.forEach(m=>{
+    let key;
+    if(m.video_id)      key = 'vid:'+m.video_id;
+    else if(m.image_hash) key = 'img:'+m.image_hash;
+    else if(m.thumb)    key = 'thumb:'+m.thumb;
+    else                key = 'ad:'+m.id;  // each ad its own asset if no signal
+    let g = groups.get(key);
+    if(!g){ g = {key, members:[], kind: m.video_id?'video':'image'}; groups.set(key, g); }
+    g.members.push(m);
+  });
+  const assets = [];
+  groups.forEach(g=>{
+    const spend = g.members.reduce((s,m)=>s+m.spend,0);
+    const rev = g.members.reduce((s,m)=>s+m.revenue,0);
+    const purch = g.members.reduce((s,m)=>s+m.purchases,0);
+    const imps = g.members.reduce((s,m)=>s+m.impressions,0);
+    const clicks = g.members.reduce((s,m)=>s+m.clicks,0);
+    const flagCount = g.members.reduce((s,m)=>s+(m.compliance||[]).length,0);
+    // Pick a representative member for thumb/video (the highest-spend member)
+    const rep = g.members.slice().sort((a,b)=>b.spend-a.spend)[0];
+    assets.push({
+      key: g.key, kind: g.kind, members: g.members, rep,
+      spend, revenue:rev, purchases:purch, impressions:imps, clicks,
+      roas: spend?rev/spend:0, cpp: purch?spend/purch:Infinity,
+      ctr: imps?clicks/imps*100:0, cpm: imps?spend/imps*1000:0,
+      flagCount, variants: g.members.length,
+    });
+  });
+  // Rank by chosen metric
+  const higher = def.higherBetter;
+  assets.sort((a,b)=>{
+    const va = def.get(a), vb = def.get(b);
+    if(!isFinite(va) && !isFinite(vb)) return 0;
+    if(!isFinite(va)) return 1;
+    if(!isFinite(vb)) return -1;
+    return higher ? vb-va : va-vb;
+  });
+  return assets;
+}
+
+function renderAssetRanking(assets, metricKey){
+  if(assets.length <= 1) return '';  // nothing to rank if single asset
+  const def = METRIC_DEFS[metricKey];
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  // Compute median of the winner metric for delta calculations
+  const values = assets.map(a=>def.get(a)).filter(v=>isFinite(v));
+  if(!values.length) return '';
+  const median = values.slice().sort((a,b)=>a-b)[Math.floor(values.length/2)];
+  const best = def.get(assets[0]);
+  const worst = def.get(assets[assets.length-1]);
+
+  const cards = assets.map((a, i)=>{
+    const letter = i<26 ? letters[i] : 'A'+(i-25);
+    const rankCls = i===0 ? ' rank-1' : (i===assets.length-1 ? ' rank-last' : '');
+    const ts = thumbSrc(a.rep);
+    const vs = videoSrc(a.rep);
+    const thumb = ts
+      ? (vs ? '<div class="vid-wrap" data-video-src="'+esc(vs)+'"><img src="'+esc(ts)+'" loading="lazy"><div class="play-btn">&#9654;</div></div>' : '<img src="'+esc(ts)+'" loading="lazy">')
+      : '<div class="asset-no-thumb">no thumb</div>';
+    const primary = def.fmt(def.get(a));
+    // Delta vs median
+    const v = def.get(a);
+    let deltaHtml = '';
+    if(isFinite(v) && isFinite(median) && median){
+      const rawD = def.higherBetter ? (v-median)/median : (median-v)/median;
+      const pct = Math.abs(rawD*100);
+      if(pct >= 1){
+        const cls = rawD>=0 ? 'delta-pos' : 'delta-neg';
+        const sign = rawD>=0 ? '+' : '−';
+        deltaHtml = ' <span class="'+cls+'">('+sign+pct.toFixed(0)+'% vs median)</span>';
+      }
+    }
+    const readout = i===0
+      ? '<b>🏆 Top asset</b> for '+def.label+' · '+primary+(assets.length>1?' vs worst '+def.fmt(worst):'')
+      : (i===assets.length-1 && assets.length>2
+          ? '<b>⚠ Lowest</b> '+def.label+' · '+primary
+          : 'Rank #'+(i+1)+' · '+primary+deltaHtml);
+    return '<div class="asset-card'+rankCls+'">'+
+      '<div class="asset-hdr">'+
+        '<span class="asset-letter">'+esc(letter)+'</span>'+
+        '<span class="asset-rank-pos">#'+(i+1)+' of '+assets.length+'</span>'+
+      '</div>'+
+      thumb+
+      '<div class="asset-metrics">'+
+        '<span class="m-label">'+def.label+'</span><span class="m-value primary">'+primary+'</span>'+
+        '<span class="m-label">Spend</span><span class="m-value">'+fmtMoney(a.spend)+'</span>'+
+        '<span class="m-label">ROAS</span><span class="m-value">'+(a.roas||0).toFixed(2)+'x</span>'+
+        '<span class="m-label">CPP</span><span class="m-value">'+(isFinite(a.cpp)?fmtMoney(a.cpp):'—')+'</span>'+
+        '<span class="m-label">CTR</span><span class="m-value">'+(a.ctr||0).toFixed(2)+'%</span>'+
+        '<span class="m-label">Purch</span><span class="m-value">'+fmtNum(a.purchases)+'</span>'+
+      '</div>'+
+      '<div class="asset-readout">'+readout+'</div>'+
+      '<div class="asset-var-count">'+a.variants+' ad variant'+(a.variants>1?'s':'')+' used this asset'+(a.flagCount?' · <span class="delta-neg">⚠ '+a.flagCount+' compliance flag'+(a.flagCount>1?'s':'')+'</span>':'')+'</div>'+
+    '</div>';
+  }).join('');
+
+  return '<div class="asset-rank">'+
+    '<div class="asset-rank-hdr">🖼 Asset-level ranking <span class="sub">'+assets.length+' distinct assets in this cluster · ranked by '+def.label+'</span></div>'+
+    '<div class="asset-grid">'+cards+'</div>'+
+  '</div>';
+}
+
 function renderWhyWinner(analysis, metricKey){
   const def = METRIC_DEFS[metricKey];
   if(!analysis.drivers.length) return '<div class="section-desc" style="margin:8px 0">Variants are essentially identical on measurable dimensions — winner likely due to timing, random variance, or audience saturation.</div>';
@@ -968,6 +1100,7 @@ function renderClusters(){
         '<div><span class="variant-tag winner">'+esc(labelFor[winner.id]||'A')+'</span><b style="color:#22c55e">🏆 Winner:</b> '+esc(winner.name)+' — '+fmtMoney(winner.spend)+' · '+def.label+' '+winnerMetric+'</div>'+
         (loser && loser.id!==winner.id?'<div><span class="variant-tag loser">'+esc(labelFor[loser.id]||'Z')+'</span><b style="color:#ef4444">💀 Worst variant:</b> '+esc(loser.name)+' — '+fmtMoney(loser.spend)+' · '+def.label+' '+loserMetric+'</div>':'')+
       '</div>'+
+      renderAssetRanking(buildAssetRanking(c.members, metricKey), metricKey)+
       renderWhyWinner(analysis, metricKey)+
       '<div class="member-grid">'+thumbs+'</div>'+
       '<details><summary>Expand all '+c.members.length+' variants</summary><div class="grid" style="margin-top:10px">'+sorted.map(m=>{
