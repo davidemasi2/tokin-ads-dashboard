@@ -14,6 +14,9 @@ h1{margin:0 0 4px;font-size:22px;letter-spacing:-0.01em}
 .chip.on{background:#3b82f6;color:#fff}
 .search-box{background:#151524;border:1px solid #272740;border-radius:10px;padding:6px 10px;color:#e5e5ea;font:inherit;font-size:12px;min-width:220px}
 .search-box:focus{outline:none;border-color:#3b82f6}
+.slider-wrap{display:flex;gap:8px;align-items:center;background:#151524;border:1px solid #272740;border-radius:10px;padding:4px 10px;font-size:12px;color:#c7c7d1}
+.slider-wrap input[type=range]{accent-color:#3b82f6;width:120px}
+.slider-wrap .val{font-variant-numeric:tabular-nums;color:#fff;min-width:58px;text-align:right}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 24px}
 .kpi{background:#151524;border:1px solid #272740;border-radius:12px;padding:10px 14px}
 .kpi .v{font-size:20px;font-weight:600;letter-spacing:-0.01em}
@@ -111,6 +114,7 @@ summary:hover{color:#c7c7d1}
   <div class="fg"><span class="fg-lbl">Format</span><button class="chip on" data-dim="fmt" data-val="All">All</button><button class="chip" data-dim="fmt" data-val="image">image</button><button class="chip" data-dim="fmt" data-val="video">video</button></div>
   <div class="fg"><span class="fg-lbl">Tier</span><button class="chip on" data-dim="tier" data-val="All">All</button><button class="chip" data-dim="tier" data-val="flagship">flagship</button><button class="chip" data-dim="tier" data-val="scaler">scaler</button><button class="chip" data-dim="tier" data-val="winner">winner</button><button class="chip" data-dim="tier" data-val="marginal">marginal</button><button class="chip" data-dim="tier" data-val="loser">loser</button><button class="chip" data-dim="tier" data-val="waste">waste</button><button class="chip" data-dim="tier" data-val="untested">untested</button></div>
   <div class="fg"><span class="fg-lbl">Offer</span><button class="chip on" data-dim="offer" data-val="All">All</button><button class="chip" data-dim="offer" data-val="26% off">26% off</button><button class="chip" data-dim="offer" data-val="30% off">30% off</button><button class="chip" data-dim="offer" data-val="42% off">42% off</button><button class="chip" data-dim="offer" data-val="Bundle">Bundle</button><button class="chip" data-dim="offer" data-val="Free shipping">Free shipping</button><button class="chip" data-dim="offer" data-val="Holiday">Holiday</button><button class="chip" data-dim="offer" data-val="Scarcity">Scarcity</button><button class="chip" data-dim="offer" data-val="(none)">(none)</button></div>
+  <div class="slider-wrap"><span class="fg-lbl">Min spend</span><input type="range" id="min-spend" min="0" max="11" step="1" value="0"><span class="val" id="min-spend-val">$0</span></div>
   <input class="search-box" id="search" placeholder="Search copy, name, adset…">
 </div>
 </div>
@@ -182,8 +186,9 @@ const ADS = JSON.parse(document.getElementById('data-ads').textContent);
 const CLUSTERS = JSON.parse(document.getElementById('data-clusters').textContent);
 const REPRODUCE = JSON.parse(document.getElementById('data-reproduce').textContent);
 
+const SPEND_STOPS = [0, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000];
 const state = {
-  year:'All', account:'All', fmt:'All', tier:'All', offer:'All', search:'',
+  year:'All', account:'All', fmt:'All', tier:'All', offer:'All', search:'', minSpend:0,
   sort: {cluster:'spend-desc', tier:'spend-desc', comp:'spend-desc', ads:'spend-desc'}
 };
 
@@ -208,6 +213,7 @@ function filterAds(){
       if(state.offer==='(none)'){if((a.offers||[]).length) return false}
       else if(!(a.offers||[]).includes(state.offer)) return false;
     }
+    if(state.minSpend>0 && a.spend<state.minSpend) return false;
     if(q){
       const hay = ((a.name||'')+' '+(a.body||'')+' '+(a.title||'')+' '+(a.adset||'')+' '+(a.campaign||'')).toLowerCase();
       if(!hay.includes(q)) return false;
@@ -835,6 +841,13 @@ document.getElementById('search').addEventListener('input', e=>{
   state.search = e.target.value;
   clearTimeout(window.__srch);
   window.__srch = setTimeout(renderAll, 150);
+});
+document.getElementById('min-spend').addEventListener('input', e=>{
+  const idx = +e.target.value;
+  state.minSpend = SPEND_STOPS[idx];
+  document.getElementById('min-spend-val').textContent = '$'+state.minSpend.toLocaleString();
+  clearTimeout(window.__ms);
+  window.__ms = setTimeout(renderAll, 100);
 });
 function bindSort(id, key, fn){
   const el = document.getElementById(id);
