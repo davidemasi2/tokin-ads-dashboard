@@ -263,13 +263,13 @@ summary:hover{color:#c7c7d1}
 </div>
 
 <div class="pane" id="pane-clusters">
-  <div class="section-hdr">Creative clusters<div class="section-ctl">Sort by <select id="cluster-sort"><optgroup label="Aggregate (all variants)"><option value="spend-desc">Spend ↓</option><option value="spend-asc">Spend ↑</option><option value="roas-desc">ROAS ↓</option><option value="roas-asc">ROAS ↑</option><option value="size-desc">Variants ↓</option><option value="size-asc">Variants ↑</option><option value="purchases-desc">Purchases ↓</option><option value="last_seen-desc">Recency ↓</option></optgroup><optgroup label="Winner variant only"><option value="win_roas-desc" selected>Winner ROAS ↓</option><option value="win_roas-asc">Winner ROAS ↑</option><option value="win_cpp-asc">Winner CPP ↑ (cheapest)</option><option value="win_cpp-desc">Winner CPP ↓</option><option value="win_ctr-desc">Winner CTR ↓</option><option value="win_cpm-asc">Winner CPM ↑</option><option value="win_purchases-desc">Winner Purchases ↓</option><option value="win_spend-desc">Winner Spend ↓</option></optgroup></select> · Winner by <select id="cluster-winner"><option value="roas">ROAS (max)</option><option value="cpp">CPP (min)</option><option value="ctr">CTR (max)</option><option value="cpm">CPM (min)</option><option value="purchases">Purchases (max)</option><option value="spend">Spend (max)</option></select></div></div>
+  <div class="section-hdr">Creative clusters<div class="section-ctl">Sort by <select id="cluster-sort"><optgroup label="Aggregate (all variants)"><option value="spend-desc">Spend ↓</option><option value="spend-asc">Spend ↑</option><option value="roas-desc">ROAS ↓</option><option value="roas-asc">ROAS ↑</option><option value="cpp-asc">CPP ↑ (cheapest)</option><option value="cpp-desc">CPP ↓</option><option value="ctr-desc">CTR ↓</option><option value="cpm-asc">CPM ↑</option><option value="size-desc">Variants ↓</option><option value="size-asc">Variants ↑</option><option value="purchases-desc">Purchases ↓</option><option value="last_seen-desc">Recency ↓</option></optgroup><optgroup label="Winner variant only"><option value="win_roas-desc" selected>Winner ROAS ↓</option><option value="win_roas-asc">Winner ROAS ↑</option><option value="win_cpp-asc">Winner CPP ↑ (cheapest)</option><option value="win_cpp-desc">Winner CPP ↓</option><option value="win_ctr-desc">Winner CTR ↓</option><option value="win_cpm-asc">Winner CPM ↑</option><option value="win_purchases-desc">Winner Purchases ↓</option><option value="win_spend-desc">Winner Spend ↓</option></optgroup></select> · Winner by <select id="cluster-winner"><option value="roas">ROAS (max)</option><option value="cpp">CPP (min)</option><option value="ctr">CTR (max)</option><option value="cpm">CPM (min)</option><option value="purchases">Purchases (max)</option><option value="spend">Spend (max)</option></select></div></div>
   <div class="section-desc">Ads grouped by shared video/image or body-text similarity. Each cluster shows aggregate performance and winner-vs-loser within variants.</div>
   <div id="clusters-out"></div>
 </div>
 
 <div class="pane" id="pane-tiers">
-  <div class="section-hdr">Performance tiers<div class="section-ctl">Sort ads by <select id="tier-sort"><option value="spend-desc">Spend ↓</option><option value="spend-asc">Spend ↑</option><option value="roas-desc">ROAS ↓</option><option value="roas-asc">ROAS ↑</option><option value="ctr-desc">CTR ↓</option><option value="cpm-asc">CPM ↑</option><option value="purchases-desc">Purchases ↓</option><option value="created-desc">Newest</option><option value="created-asc">Oldest</option></select></div></div>
+  <div class="section-hdr">Performance tiers<div class="section-ctl">Sort ads by <select id="tier-sort"><option value="spend-desc">Spend ↓</option><option value="spend-asc">Spend ↑</option><option value="roas-desc">ROAS ↓</option><option value="roas-asc">ROAS ↑</option><option value="cpp-asc">CPP ↑ (cheapest)</option><option value="cpp-desc">CPP ↓</option><option value="ctr-desc">CTR ↓</option><option value="ctr-asc">CTR ↑</option><option value="cpm-asc">CPM ↑</option><option value="cpm-desc">CPM ↓</option><option value="purchases-desc">Purchases ↓</option><option value="purchases-asc">Purchases ↑</option><option value="created-desc">Newest</option><option value="created-asc">Oldest</option></select></div></div>
   <div id="tiers-out"></div>
 </div>
 
@@ -286,7 +286,7 @@ summary:hover{color:#c7c7d1}
 </div>
 
 <div class="pane" id="pane-compliance">
-  <div class="section-hdr">Compliance scan<div class="section-ctl">Sort flagged ads by <select id="comp-sort"><option value="spend-desc">Spend ↓</option><option value="roas-desc">ROAS ↓</option><option value="created-desc">Newest</option></select></div></div>
+  <div class="section-hdr">Compliance scan<div class="section-ctl">Sort flagged ads by <select id="comp-sort"><option value="spend-desc">Spend ↓</option><option value="spend-asc">Spend ↑</option><option value="roas-desc">ROAS ↓</option><option value="roas-asc">ROAS ↑</option><option value="cpp-asc">CPP ↑ (cheapest)</option><option value="cpp-desc">CPP ↓</option><option value="ctr-desc">CTR ↓</option><option value="cpm-asc">CPM ↑</option><option value="purchases-desc">Purchases ↓</option><option value="created-desc">Newest</option><option value="created-asc">Oldest</option></select></div></div>
   <div class="section-desc">Ads flagged for FDA-sensitive claims, THC/CBD references, superlatives, health claims, guarantees, and time-urgency patterns.</div>
   <div id="compliance-out"></div>
 </div>
@@ -298,7 +298,7 @@ summary:hover{color:#c7c7d1}
 </div>
 
 <div class="pane" id="pane-ads">
-  <div class="section-hdr">All ads<div class="section-ctl">Sort by <select id="ads-sort"><option value="spend-desc">Spend ↓</option><option value="spend-asc">Spend ↑</option><option value="roas-desc">ROAS ↓</option><option value="roas-asc">ROAS ↑</option><option value="ctr-desc">CTR ↓</option><option value="cpm-asc">CPM ↑</option><option value="cpp-asc">CPP ↑</option><option value="purchases-desc">Purchases ↓</option><option value="created-desc">Newest</option><option value="created-asc">Oldest</option></select></div></div>
+  <div class="section-hdr">All ads<div class="section-ctl">Sort by <select id="ads-sort"><option value="spend-desc">Spend ↓</option><option value="spend-asc">Spend ↑</option><option value="roas-desc">ROAS ↓</option><option value="roas-asc">ROAS ↑</option><option value="cpp-asc">CPP ↑ (cheapest)</option><option value="cpp-desc">CPP ↓</option><option value="ctr-desc">CTR ↓</option><option value="ctr-asc">CTR ↑</option><option value="cpm-asc">CPM ↑</option><option value="cpm-desc">CPM ↓</option><option value="purchases-desc">Purchases ↓</option><option value="purchases-asc">Purchases ↑</option><option value="created-desc">Newest</option><option value="created-asc">Oldest</option></select></div></div>
   <div id="ads-out"></div>
 </div>
 
@@ -1159,8 +1159,15 @@ function renderClusters(){
     // Pre-compute variant analysis (so sort can use winner's metrics)
     const analysis = analyzeVariants(members, metricKey);
     const w = analysis.winner;
+    const imps = members.reduce((s,a)=>s+a.impressions,0);
+    const clicks = members.reduce((s,a)=>s+a.clicks,0);
     return Object.assign({}, c, {
-      members, spend, revenue:rev, purchases:purch, roas:spend?rev/spend:0, size:members.length,
+      members, spend, revenue:rev, purchases:purch,
+      roas: spend?rev/spend:0,
+      cpp:  purch? spend/purch : Infinity,
+      ctr:  imps?  clicks/imps*100 : 0,
+      cpm:  imps?  spend/imps*1000 : 0,
+      size: members.length,
       _analysis: analysis,
       win_roas:  w.roas || 0,
       win_cpp:   w.purchases ? w.spend/w.purchases : Infinity,
