@@ -202,9 +202,14 @@ const CLUSTERS = JSON.parse(document.getElementById('data-clusters').textContent
 const REPRODUCE = JSON.parse(document.getElementById('data-reproduce').textContent);
 // Prefer fullres locally, medium on remote. Falls back to small thumb.
 const IS_LOCAL = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+const REMOTE_VIDEO_BASE = 'https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/';
 function thumbSrc(a){
   if(!a) return '';
   return IS_LOCAL ? (a.thumb_full || a.thumb_med || a.thumb || '') : (a.thumb_med || a.thumb || '');
+}
+function videoSrc(a){
+  if(!a || !a.video_path) return '';
+  return IS_LOCAL ? a.video_path : REMOTE_VIDEO_BASE + a.video_path;
 }
 
 const SPEND_STOPS = [0, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000];
@@ -367,11 +372,12 @@ function adCard(a){
   (a.offers||[]).forEach(o=>tags.push('<span class="tag offer">'+esc(o)+'</span>'));
   (a.compliance||[]).forEach(c=>tags.push('<span class="tag flag">⚠ '+esc(c)+'</span>'));
   const ts = a.video_path ? (a.video_thumb_path || thumbSrc(a)) : thumbSrc(a);
+  const vs = videoSrc(a);
   let thumb;
-  if(a.video_path){
+  if(vs){
     thumb = ts
-      ? '<div class="vid-wrap" data-video-path="'+esc(a.video_path)+'"><img src="'+esc(ts)+'" loading="lazy"><div class="play-btn">&#9654;</div></div>'
-      : '<div class="vid-wrap" data-video-path="'+esc(a.video_path)+'"><div class="no-thumb" style="width:80px;height:80px">▶</div></div>';
+      ? '<div class="vid-wrap" data-video-src="'+esc(vs)+'"><img src="'+esc(ts)+'" loading="lazy"><div class="play-btn">&#9654;</div></div>'
+      : '<div class="vid-wrap" data-video-src="'+esc(vs)+'"><div class="no-thumb" style="width:80px;height:80px">▶</div></div>';
   } else {
     thumb = ts ? '<img src="'+esc(ts)+'" loading="lazy">' : '<div class="no-thumb">no thumb</div>';
   }
@@ -1106,9 +1112,9 @@ document.getElementById('summary-out').addEventListener('click', e=>{
 // Video card click → inline player
 document.addEventListener('click', e=>{
   const wrap = e.target.closest('.vid-wrap');
-  if(!wrap || !wrap.dataset.videoPath) return;
-  const path = wrap.dataset.videoPath;
-  wrap.innerHTML = '<video controls autoplay playsinline preload="metadata" src="'+esc(path)+'" style="width:80px;height:80px;border-radius:6px;object-fit:cover"></video>';
+  if(!wrap || !wrap.dataset.videoSrc) return;
+  const src = wrap.dataset.videoSrc;
+  wrap.innerHTML = '<video controls autoplay playsinline preload="metadata" src="'+esc(src)+'" style="width:80px;height:80px;border-radius:6px;object-fit:cover"></video>';
   wrap.style.cursor = 'default';
 });
 
