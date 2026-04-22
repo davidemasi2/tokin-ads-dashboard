@@ -211,7 +211,7 @@ summary:hover{color:#c7c7d1}
 </div>
 
 <div class="pane" id="pane-clusters">
-  <div class="section-hdr">Creative clusters<div class="section-ctl">Sort by <select id="cluster-sort"><option value="spend-desc">Spend ↓</option><option value="spend-asc">Spend ↑</option><option value="roas-desc">ROAS ↓</option><option value="roas-asc">ROAS ↑</option><option value="size-desc">Variants ↓</option><option value="size-asc">Variants ↑</option><option value="purchases-desc">Purchases ↓</option><option value="last_seen-desc">Recency ↓</option></select> · Winner by <select id="cluster-winner"><option value="roas">ROAS (max)</option><option value="cpp">CPP (min)</option><option value="ctr">CTR (max)</option><option value="cpm">CPM (min)</option><option value="purchases">Purchases (max)</option><option value="spend">Spend (max)</option></select></div></div>
+  <div class="section-hdr">Creative clusters<div class="section-ctl">Sort by <select id="cluster-sort"><optgroup label="Aggregate (all variants)"><option value="spend-desc">Spend ↓</option><option value="spend-asc">Spend ↑</option><option value="roas-desc">ROAS ↓</option><option value="roas-asc">ROAS ↑</option><option value="size-desc">Variants ↓</option><option value="size-asc">Variants ↑</option><option value="purchases-desc">Purchases ↓</option><option value="last_seen-desc">Recency ↓</option></optgroup><optgroup label="Winner variant only"><option value="win_roas-desc" selected>Winner ROAS ↓</option><option value="win_roas-asc">Winner ROAS ↑</option><option value="win_cpp-asc">Winner CPP ↑ (cheapest)</option><option value="win_cpp-desc">Winner CPP ↓</option><option value="win_ctr-desc">Winner CTR ↓</option><option value="win_cpm-asc">Winner CPM ↑</option><option value="win_purchases-desc">Winner Purchases ↓</option><option value="win_spend-desc">Winner Spend ↓</option></optgroup></select> · Winner by <select id="cluster-winner"><option value="roas">ROAS (max)</option><option value="cpp">CPP (min)</option><option value="ctr">CTR (max)</option><option value="cpm">CPM (min)</option><option value="purchases">Purchases (max)</option><option value="spend">Spend (max)</option></select></div></div>
   <div class="section-desc">Ads grouped by shared video/image or body-text similarity. Each cluster shows aggregate performance and winner-vs-loser within variants.</div>
   <div id="clusters-out"></div>
 </div>
@@ -276,7 +276,7 @@ const state = {
   sumMetric: 'roas',
   reproOpt: 'roas', reproMin: 500,
   clusterWinner: 'roas',
-  sort: {cluster:'spend-desc', tier:'spend-desc', comp:'spend-desc', ads:'spend-desc'}
+  sort: {cluster:'win_roas-desc', tier:'spend-desc', comp:'spend-desc', ads:'spend-desc'}
 };
 
 // ============================================================
@@ -1043,6 +1043,8 @@ function renderClusters(){
   const f = filterAds();
   const idset = new Set(f.map(a=>a.id));
   const byId = Object.fromEntries(f.map(a=>[a.id,a]));
+  const metricKey = state.clusterWinner || 'roas';
+  const def = METRIC_DEFS[metricKey];
   let rows = CLUSTERS.map(c=>{
     const mems = c.members.filter(m=>idset.has(m));
     if(!mems.length) return null;
@@ -1050,7 +1052,19 @@ function renderClusters(){
     const spend = members.reduce((s,a)=>s+a.spend,0);
     const rev = members.reduce((s,a)=>s+a.revenue,0);
     const purch = members.reduce((s,a)=>s+a.purchases,0);
-    return Object.assign({}, c, {members, spend, revenue:rev, purchases:purch, roas:spend?rev/spend:0, size:members.length});
+    // Pre-compute variant analysis (so sort can use winner's metrics)
+    const analysis = analyzeVariants(members, metricKey);
+    const w = analysis.winner;
+    return Object.assign({}, c, {
+      members, spend, revenue:rev, purchases:purch, roas:spend?rev/spend:0, size:members.length,
+      _analysis: analysis,
+      win_roas:  w.roas || 0,
+      win_cpp:   w.purchases ? w.spend/w.purchases : Infinity,
+      win_ctr:   w.ctr || 0,
+      win_cpm:   w.cpm || 0,
+      win_purchases: w.purchases || 0,
+      win_spend: w.spend || 0,
+    });
   }).filter(Boolean);
 
   const sk = state.sort.cluster;
@@ -1058,6 +1072,8 @@ function renderClusters(){
   const mul = dir==='asc'?1:-1;
   rows.sort((a,b)=>{
     let va = a[field], vb = b[field];
+    if(!isFinite(va)) va = dir==='asc' ? Infinity : -Infinity;
+    if(!isFinite(vb)) vb = dir==='asc' ? Infinity : -Infinity;
     if(typeof va==='string') return va.localeCompare(vb)*mul;
     return ((va||0)-(vb||0))*mul;
   });
@@ -1065,11 +1081,8 @@ function renderClusters(){
   if(!rows.length){ document.getElementById('clusters-out').innerHTML='<div class="section-desc">No clustered ads in filtered view.</div>'; return; }
 
   const sortAd = state.sort.tier;
-  const metricKey = state.clusterWinner || 'roas';
-  const def = METRIC_DEFS[metricKey];
   document.getElementById('clusters-out').innerHTML = rows.map(c=>{
-    // Analyze variants for this cluster
-    const analysis = analyzeVariants(c.members, metricKey);
+    const analysis = c._analysis;
     const winner = analysis.winner;
     const loser = c.members.length>1 ? analysis.loser : null;
     const labelFor = analysis.labelFor;
