@@ -1,177 +1,188 @@
-# Tokin Ads Dashboard — Handoff (2026-04-22, 12:58 MDT)
+# Tokin Ads — Handoff (2026-04-22, 17:45 MDT)
+
+## Session summary
+
+Built the **Summer 2026 Paid Media Plan** from scratch with data-verified heroes, rebuilt the 4-campaign brief around verified creative (visually inspected), refreshed the Meta token + pulled all accessible video thumbs, and pushed the full 500 MB creative library to Google Drive as a public asset.
 
 ## Live URLs
-- **Dashboard**: https://tokin-ads-dashboard-production.up.railway.app
-- **Creative Breakdown**: https://tokin-ads-dashboard-production.up.railway.app/creative_breakdown.html
-- **GitHub repo** (public): https://github.com/davidemasi2/tokin-ads-dashboard
-- **Skill tarball**: https://github.com/davidemasi2/tokin-ads-dashboard/raw/main/tokin-ads-advisor.tar.gz
-- **Install one-liner**: `curl -fsSL https://github.com/davidemasi2/tokin-ads-dashboard/raw/main/tokin-ads-advisor.tar.gz | tar -xzf - -C /tmp && bash /tmp/tokin-ads-advisor/install.sh`
+
+| Asset | URL |
+| --- | --- |
+| Ads Dashboard (Railway) | https://tokin-ads-dashboard-production.up.railway.app |
+| Creative Breakdown | https://tokin-ads-dashboard-production.up.railway.app/creative_breakdown.html |
+| GitHub repo (public) | https://github.com/davidemasi2/tokin-ads-dashboard |
+| Skill tarball | https://github.com/davidemasi2/tokin-ads-dashboard/raw/main/tokin-ads-advisor.tar.gz |
+| **Creative Library (Google Drive, public)** | https://drive.google.com/drive/folders/1DfDDbQ8hOyvcaktNXRaoSNtXYZrtWO2s |
+
+## Google Drive Creative Library (NEW)
+
+- **Root folder**: `Tokin Ads Creative Library` (id `1DfDDbQ8hOyvcaktNXRaoSNtXYZrtWO2s`) — public, anyone with link can view
+- **fullres/** — 1,136 images · 344 MB · folder id `1Xm_z-auJqSoVfO6B3pmK9CZKdvEdHNoT`
+- **videos/** — 77 MP4s · 113 MB · folder id `1P4w_AA2JuG8TG5F24zGIPXxEfVWfbZud`
+- **thumbnails_med/** — 989 thumbs · 42 MB · folder id `1_yVe0sWsrh2BUeSxJjfoaEnoXG1zQ5is`
+- **Upload script**: `upload_to_drive.py` — parallel multipart uploads via Drive REST API, OAuth token param
 
 ## Dataset
+
 - 721 ads across TC1/TC2/TC3 · $356,556 spend · 2.23× ROAS · 10,675 purchases
 - 97 clusters · 312 unique visuals (pHash deduped) · 166 compliance-flagged
 - Shopify: 25,571 orders · $934K chews rev (12mo) · $194K merch rev
 
+## Notion pages
+
+| Page | ID | Status |
+| --- | --- | --- |
+| **📣 Paid Media Plan — Summer 2026** (live) | `34a26136-b372-818d-881f-cefa231532ca` | Current source of truth |
+| 🛠️ Internal Tools Guide | `34a26136-b372-8187-b7eb-c53325bf1630` | Updated with Creative Library link |
+| Tokin' Home (parent) | `06b26136-b372-83ae-b247-81e3464c837a` | Unchanged |
+| [ARCHIVED] Paid Media Plan — 2026 Summer | `32726136-b372-811b-b1c9-c4871caa9a03` | Superseded, redirect banner |
+
 ## Skills installed
+
 - **tokin-ads-advisor** — ad intelligence, bundled data, query helper
 - **tokin-jew-db** — live Shopify/Klaviyo DB
 
-## Notion pages
-- **Internal Tools Guide** (`34a26136-b372-8187-b7eb-c53325bf1630`) — updated to 4 tools: Command Center · Claude DB Skill · Claude Ads Advisor · Ads Dashboard
-- **Paid Media Plan** — **PENDING** (see below for final spec)
-
 ---
 
-# 🎯 PAID MEDIA PLAN — Final decision snapshot
+# 🎯 PAID MEDIA PLAN — Locked Spec
 
 ## Context
-- Onboarding new media buyer → needs safe baseline to start
-- Past Passover (Apr 9) and past 4/20 → entering May-Aug Jewish holiday desert
-- **Cookies and gelt inventory low** → must shelve gelt/cookie-dependent plays
-- Goal: rebuild channel with graduated-risk campaigns, chews LTV is 40% higher than merch ($116 vs $82) but faces 28% compliance-flag rate — so merch is ToFu and chews comes second
 
-## Active 5 campaigns (deploy now)
+- Past Passover (Apr 9) and past 4/20 → entering May-Aug Jewish holiday desert until Rosh Hashanah (Sept)
+- **Cookies and gelt inventory LOW** → shelve gelt/cookie-dependent plays
+- Goal: onboard Camilla on a safe baseline while banking chews LTV via merch crossover
+- LTV: chews-first $116 · merch-first $82 (chews +40% but 28% flag rate vs merch 0%)
 
-### A. Shabbat Summer — 🟢 LOW RISK
-- **Concept**: Weekly Shabbat ritual items (Kiddush Cup · The Mezazah · Challah Pipe)
-- **Hero**: Ad `120236100453450484` "Kiddush Cup (sqr) V5" / "Sip it & Rip It 🍷" — image · **6.04× ROAS** · $917 spend · $17 CPP · 2.28% CTR · 54 purchases
-- **Thumb URL**: https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_e2ec163176c5.jpg
-- **Backup**: Ad `120234591667130484` V2 — 2.54× · $4K spend · $28 CPP
-- **LP**: tokinjew.com/collections/glassware
-- **Targeting**: LAL 1% All Website Visitors 180d
-- **Budget**: $100/day, 5-ad rotation
-- **Expected**: 2.2–2.5× ROAS · $30–40 CPP · steady baseline
+## 4 Active Campaigns
 
-### D. Kosher Closet Summer — 🟢 LOW RISK
-- **Concept**: Apparel ToFu → post-purchase 20% chews code
-- **Hero**: Ad `120235840343690484` "guiltypleasure.2" — video · **4.80× ROAS** · $418 spend · $17 CPP · 5.19% CTR (portfolio-leading CTR)
-- **Thumb URL**: https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails/120235840343690484_20bc4d3065.jpg
-- **Products (by 2026 order volume)**: Mensch Hat (420/yr) · L'Chaim Tie Dye T-Shirt (415) · One Fish Two Fish T-Shirt (400) · Let's Get Chai T-Shirt (387)
-- **Summer aesthetic**: tie-dye, camp nostalgia, BBQ/festival scenes
-- **LP**: tokinjew.com/collections/tokin-chews-merch + post-purchase redirect to tokinjewflower.com/kosher-tokin20
-- **Budget**: $150/day
-- **Expected**: 2.1–2.4× ROAS · $30–40 CPP · 12.5% chews crossover · LTV-ROAS ~3.5×
+### 🟢 A · Shabbat Kiddush Cup — LOW RISK · $100/day · BM1 merch-clean
 
-### F. Pipes & Grinders — 🟢 LOW-MED RISK
-- **Concept**: Jewish food-pun paraphernalia as "novelty gifts" (NOT functional gear)
-- **Products**: Challah Pipe · Pickle Pipe · Bagel & Lox Grinder · Shofar Pipe · Dreidel Grinder (all appear in summer top-sellers $3–5K each)
-- **Evidence**: 33 clean paraphernalia ads at 2.25× ROAS on $12K
-- **Copy discipline**: "novelty/collectible/gift/kitchen-meets-kosher" ✅ · never "smoke/hit/bowl/session" ❌
-- **Mitigation**: separate Page (`@tokinjew-kitchen` or similar) to isolate if flagged
-- **Budget**: $100/day
-- **Expected**: 2.0–2.4× ROAS · $30–45 CPP · 12.5% crossover
+- **Hero #1**: Kiddush V5 `120236100453450484` · 6.04× ROAS · $917 · $17 CPP · 2.28% CTR
+- **Hero #2**: Kiddush V2 `120234591667130484` · 2.54× ROAS · $4K · 142 purchases (scale-volume)
+- **Hero #3**: Kiddush V8 `120236100453440484` · 1.79× · ⚠️ cannabis leaves in visual → BM2 weed-test only
+- **LP**: tokinjew.com/collections/glassware/products/kiddush-cup-pipe
+- **Compliance**: 🟢 all 3 clean, 0 flags
 
-### C. Daytime/Nighttime Chai Routine — 🟡 MEDIUM RISK
-- **Concept**: Functional chews as summer daily routine — replaces lost cookies/gelt volume
-- **Hero**: Ad `120239040920820484` "Your New Daytime Chai 👉🏼" — **2.90× ROAS** on $2K · $36 CPP
-- **Thumb URL**: https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_9ca11ea08e18.jpg
-- **Backups**: `120227491006930484` "Mitzvah-Grade Chai" 2.79× · `120214902880040484` "Let's Get Chai" 2.74×
-- **Product matrix**:
-  - Morning → Apple-Energy & Focus / Apple THCV ($9K summer rev)
-  - Afternoon → Watermelon High Dose ($26K summer rev — top seller)
-  - Evening → Passionfruit Guava / Mango Peach
-  - Night → Grape-Sleep & Relax ($11K summer rev) / Grape CBN
-- **Copy discipline**: "chai" + time-context only · NEVER "relief/anxiety/sleep aid/pain/high/stoned"
-- **Budget**: $150-300/day scalable
-- **Expected**: 2.3–2.8× ROAS · $35–45 CPP · primary volume engine May-Aug
+### 🟡 B · Chews (Classic + Functional) — MED RISK · $200/day · BM3 weed-production
 
-### E. Which Tokin' Jew Are You? Quiz — 🔴 HIGH RISK
-- **Concept**: Interactive archetype quiz → product recommendation → email capture → chews offer
-- **Proof**: Ad `120239611228270484` "Mix, Match, & Get Chai" (COMPLIANT) — **3.64× ROAS** · $1.5K · $31 CPP
-- **Thumb URL**: https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_aa235400dc5a.jpg
-- **Archetypes**: The Rabbi (Sleep & Relax) · The Bubbe (variety pack) · The Mensch (Tokin' Jays) · The Schlimazel (Watermelon High Dose)
-- **Infrastructure**: NEW Business Manager + new Page + jump page on `tokinjewquiz.com`
-- **Quiz stack**: Typeform or native HTML → email capture → Klaviyo flow → $10 off first chews order
-- **Budget**: $50/day × 14 days · scale if CAC < $30
-- **Expected**: 2.5–4.0× ROAS · 40-60% email capture on completers · best-case blended LTV-ROAS ~5×
-- **Setup time**: 10-14 days (new BM + jump page) — can build in parallel with A/D/F/C execution
+- **Hero #1 Guava Nagila** `120217536466960484` · 2.16× on $9.3K · 242 purchases
+- **Hero #2 Watermelon Sugar Chai** `120217256695430484` · 2.39× on $3.5K · top-seller SKU
+- **Hero #3 Let's Get Chai (Static Assorted)** `120214902880040484` · 2.74× on $1.3K
+- **Hero #4 Pom B-roll VIDEO** `120227491006930484` · 2.79× on $2.6K · video thumb available, MP4 blocked by IG Reel permissions
+- **Backup** Ran-It-By-Rabbi `120235374415200484` · **REQUIRES copy scrub** — body contains "10mg TH" → change to "10mg per piece"
+- **Compliance**: 🟡 bucket flag rate 28% — strictest copy discipline applies
 
-## Deployment — "Merch Wall First" (Option 2)
+### 🧩 C · Clean Merch → Weed Upsell — TEST · $75/day · BM1 → BM2 crossover
 
-| Week | Launch | Main BM budget | New BM budget |
-|---|---|---:|---:|
-| W1 | A + D + F | $350/day | — |
-| W2 | Add C | $550/day | start BM/jump page build |
-| W3 | All 4 live | $650/day | infra build continues |
-| W4 | Add E on new BM | $650/day | $50/day |
-| W5+ | Scale winners · kill losers | $800–1,200/day | $50–200/day |
+- **No proven hero** — zero apparel ads ever run above $100 spend historically
+- Creative brief in Notion §5: 3 static + 1 UGC video featuring Mensch Hat (420/yr), L'Chaim Tie Dye (415/yr), One Fish Two Fish (400/yr)
+- Post-purchase Klaviyo flow → 20% flower code → route to tokinjewflower.com
+- Graduation bar: 2.0× ROAS at $500 spend → scale to $150/day
 
-**30-day projection** (this deployment): ~$17K spend · 2.4× blended ROAS · $41K revenue · ~650 customers acquired · ~80 merch→chews crossovers banked for future LTV
+### 🧩 D · Paraphernalia Novelty — TEST · $75/day · BM2 weed-test
 
-## Shelved (revive on trigger)
+- **Hero #1** Burning Bush Dreidel Pipe `120233960513670484` · 1.36× on $165 · only proven paraph creative
+- **Hero #2** Shabbat Lifestyle (NEW, to be shot) — repurposed from K4P Citrus 5.63× ROAS winner on $10K. Shoot Kiddush Cup Pipe on Shabbat table (NO matzah, NO seder-specific props) for evergreen year-round use. 3 copy variants in Notion: "Elevate Your Shabbat" · "Set The Holy Table" · "A Cup For Every Kiddush"
+- Creative briefs queued: Pickle Pipe · Challah Pipe (video exists, 3.80% CTR no purchases) · Bagel & Lox Grinder · Shofar Pipe (Sept)
+- Compliance: separate Page `@tokinjew-kitchen` or `@tokinjew-novelty` required
 
-| ID | Campaign | Revive trigger | Evidence |
-|---|---|---|---|
-| G | Gifting Funnel (Gelt) | Gelt restocked → ramp Oct for Hanukkah | 2.92× ROAS · $27K spend · #1 crossover product ($11.8K from merch-first buyers) |
-| H | Hamantaschen / Purim Cookies | Cookies restocked → Feb-Mar 2027 (Purim) | Hero `120219109515800484` hit **7.04× ROAS** on $415 — needs scaling |
+## 3-BM Architecture
 
-## Seasonal calendar
+| BM | Name | Page | Campaigns | Budget |
+| --- | --- | --- | --- | --- |
+| 🛡️ BM1 | `merch-clean` | `@tokinjew` (main) | A1 V5 · A2 V2 · C Merch Test | $150–200 |
+| 🧪 BM2 | `weed-test` | `@tokinjew-kitchen` (new) | A3 V8 · D1 Burning Bush · D2 Shabbat Lifestyle · Paraph tests · Quiz funnel | $100–150 |
+| 💰 BM3 | `weed-production` | `@tokinchews` (existing) | B1-B4 chews rotation · graduated winners | $150–300 scalable |
 
-| ID | Campaign | Window | Evidence |
-|---|---|---|---|
-| I | Passover Bundle (Kosher for Passover) | **Feb-Apr 2027** | Cluster C001 · 67 variants · **3.28× ROAS** (best category) |
-| J | 4/20 Kosher | **Apr 2027** (just passed) | 66 ads · 2.60× · 0 flags |
+**Rules**: Never cross-contaminate. Winners graduate BM2 → BM3 only after 14d stable + 0 flags + $1K at 2.0×.
 
-## Non-negotiables for new media buyer
-1. Never use: THC, CBD, high, stoned, weed, relief, cure, medicine
-2. Never link ads directly to gummy PDPs on new BM — always via jump page
-3. Keep main BM's TC1 account health perfect — test only on new BM
-4. Naming convention: `[Brand]_[Concept]_[Angle]_[Variant]` so dashboard clusters track them
+## Deployment Schedule
+
+| Week | Launch | Main BM1 | Test BM2 | Prod BM3 | Total |
+| --- | --- | --- | --- | --- | --- |
+| W1 | A V5/V2 + B chews rotation | $100 | — | $200 | $300 |
+| W2 | + A3 V8 on BM2 + D1 Burning Bush | $100 | $100 | $200 | $400 |
+| W3 | Commission C creative | $100 | $100 | $200 | $400 |
+| W4 | + C merch test + D2 Shabbat Lifestyle | $150 | $150 | $200 | $500 |
+| W5+ | Scale winners · kill losers | $200 | $150 | $300 | $650–1,200 |
+
+**30-day projection**: ~$13.5K spend · 2.3× blended ROAS · ~$31K revenue · ~450 new customers
+
+## Compliance playbook
+
+| Category | Rule |
+| --- | --- |
+| Banned vocab | THC · CBD · high · stoned · weed · relief · cure · medicine · anxiety · pain · sleep aid |
+| "TH" abbreviation | Never use — Meta pattern-matches as THC |
+| Images | No cannabis leaves on BM1/BM3 |
+| Paraphernalia framing | "novelty · collectible · gift · kitchen-meets-kosher" — never "smoke/hit/bowl/session" |
+| Naming | `[Brand]_[Concept]_[Angle]_[Variant]` |
+
+## Shelved (inventory-gated)
+
+- **Gelty Pleasure (Gelt)** — 2.92× on $27K / 922 purchases · revive October for Hanukkah
+- **Hamantaschen Cookies** — 2.03× on $3.8K · revive Feb-Mar 2027 for Purim
+
+## Seasonal Calendar
+
+- **K4P Passover** — 5.63× on $10K / 618 purchases · Feb-Apr 2027
+- **4/20 Kosher Jays LTO** — 6.25× on $370 · April 2027
+- **Hanukkah Bundle** — 2.27× on $7.6K · December
 
 ---
 
-# PENDING next session
+# Open Decisions (for next session)
 
-## Build Notion "Paid Media Plan" page
-- **Parent**: Tokin' Home (`06b26136-b372-83ae-b247-81e3464c837a`)
-- **Top of page**: Links to all 4 tools (Command Center, Claude DB Skill, Claude Ads Advisor, Ads Dashboard)
-- **Sections**:
-  1. Context + why this plan
-  2. Evidence tables (bucket ROAS, LTV by first-brand, crossover rates, summer seller rankings)
-  3. Campaign A full brief + hero thumbnail (render inline from GitHub raw URL)
-  4. Campaign D full brief + hero thumbnail
-  5. Campaign F full brief + hero thumbnail
-  6. Campaign C full brief + hero thumbnail
-  7. Campaign E full brief + jump page spec
-  8. Deployment calendar (Option 2 Merch Wall First)
-  9. 30/90-day projected economics
-  10. Shelved + Seasonal table (revive triggers)
-  11. Non-negotiables
-
-## Use these exact image URLs (medium-res 500×500, public GitHub raw)
-| Ad | URL |
-|---|---|
-| A · Kiddush V5 (hero) | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_e2ec163176c5.jpg |
-| A · Kiddush V2 | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_fb1766ba75e1.jpg |
-| D · guiltypleasure video | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails/120235840343690484_20bc4d3065.jpg |
-| D · Gelt that gets you chai V2 | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_7e754b6be9c1.jpg |
-| C · Your New Daytime Chai | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_9ca11ea08e18.jpg |
-| C · Mitzvah-Grade Chai | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails/120227491006930484_54b52dc3de.jpg |
-| C · Let's Get Chai | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_36673b59f385.jpg |
-| E · Mix Match Get Chai (quiz) | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_aa235400dc5a.jpg |
-| E · Worth Your Two Zuzim | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails/120220249587130484_10732fe177.jpg |
-| G · Gelt champ (shelved ref) | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_f45b3b26320f.jpg |
-| H · Hamantaschen (shelved ref) | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_bc03ec5ddf3e.jpg |
-| I · K4P Passover (seasonal ref) | https://raw.githubusercontent.com/davidemasi2/tokin-ads-dashboard/main/thumbnails_med/adimg_1449383908993328_ee2ab9fb5028.jpg |
-
-## User decisions pending
-- Green-light Option 2 "Merch Wall First" deployment sequence?
-- Launch creative copy drafts for A/D/F/C?
-- Spec out Campaign E jump page (tokinjewquiz.com) + archetype-to-product mapping?
-- Draft the post-purchase thank-you redirect spec for D?
+| # | Decision | Owner | Urgency |
+| --- | --- | --- | --- |
+| 1 | Approve BM role assignments (TC1/TC2/TC3/TC4 → BM1/BM2/BM3) | Davide | Before W1 |
+| 2 | Commission C Merch creative (~$1-2K + 2-week lead) | Davide | Before W2 |
+| 3 | Commission D2 Shabbat Lifestyle shoot ($800-1.5K) | Davide | Before W4 |
+| 4 | Copy-scrub Ran-It-By-Rabbi ("TH" → "per piece") | Camilla | Before B relaunch |
+| 5 | Kiddush V8 on BM2 only or pull? (cannabis leaves visual) | Davide | Before W2 |
+| 6 | Fund Pickle Pipe + Challah Pipe tests at $30/day? | Davide | Before W4 |
+| 7 | O1 Gelt Waitlist pre-build — commit now or wait Oct? | Davide | Anytime |
+| 8 | O2 Gummy subscription-first — add as B5 variant or parallel? | Davide + Camilla | Before W3 |
 
 ---
 
-## Recent commits
+# Known Blockers / Blind Spots
+
+- **87 hero videos are Instagram Reels** — Graph API does not return `source` URLs for IG-originated content. Only `permalink_url` + thumbnails. 77 MP4s we have in `videos/` are from older TC1 direct-upload flights. Workaround: link IG permalinks in brief, use 1080px thumbnails as inline previews.
+- **Challah Pipe video `2160373734372228`** returns OAuth error `"Application does not have permission for this action"` — the Page it was posted from hasn't granted our app asset-level access. Requires BM admin action.
+- **No proven clean merch apparel heroes** in dataset (spend > $100) — C must be scratch-built.
+- **No proven paraphernalia heroes above $165 spend** — D must rely on Burning Bush + new creative.
+- **Meta token lifespan ~2 hours** — every new session requires refresh via developers.facebook.com/tools/explorer
+- **Google Drive access token (OAuth Playground) expires 1 hour** — re-issue via oauthplayground if bulk re-upload is needed
+
+---
+
+# Recent commits (GitHub public repo)
+
 ```
-081305b  Handoff update: Paid Media Plan deliverable documented
+02e320f  Refresh: add 213 new video thumbnails + missing images from Meta pull
+b4da427  Handoff update: Paid Media Plan deliverable documented (prior handoff)
 a881c3c  Ship tokin-ads-advisor skill tarball (standalone, 145KB)
-4d62d23  Add query.py helper for tokin-ads-advisor skill
-e044bee  Update HANDOFF: clusters · asset dedup · variant tables · CPP sort
-6ab67b5  CPP + full metric sort coverage on Tiers/Clusters/Compliance/All-ads
-8e4e9d3  Variant ranking table in Clusters+Reproduce · LP populated (501/721)
-5012742  Reproduce rework: 220px hero · top-3 variants table · asset ranking
-3b0e503  Cluster sort: Winner-only options (ROAS/CPP/CTR/CPM/purchases/spend)
-9e510e0  Perceptual-hash asset dedup: 721 ads → 312 unique visuals
-05f6812  Per-asset ranking inside cluster cards with delta-vs-median
 ```
+
+---
+
+# Scripts updated this session
+
+- `upload_to_drive.py` (NEW) — parallel Drive upload via OAuth access token
+- `pull_videos.py` · `pull_videos_missing.py` · `pull_tc1_assets.py` · `pull_tc1_tc4.py` · `pull_ads_retry.py` · `pullall.py` · `pull.py` — all refreshed with 2026-04-22 Meta token
+
+## Non-negotiables for new media buyer (Camilla)
+
+1. Banned vocab: THC · CBD · high · stoned · weed · relief · cure · medicine
+2. No direct gummy-PDP links on new BM — always via jump page
+3. Main BM (TC1) health is sacred — test on BM2 only
+4. Naming convention: `[Brand]_[Concept]_[Angle]_[Variant]`
+5. Paraphernalia = "novelty/gift" framing, never functional
+6. Weekly true-ROAS review: `(Rev − COGS − Spend − Fees) / Spend` · target >2.0 true
+7. Separate Page for high-risk paraphernalia tests
+8. Every hero gets a video variant test within 14 days
+
+---
+
+**Source of truth**: [📣 Paid Media Plan — Summer 2026 (Notion)](https://www.notion.so/34a26136b372818d881fcefa231532ca) · **Last updated**: 2026-04-22 17:45 MDT
