@@ -228,8 +228,22 @@ summary:hover{color:#c7c7d1}
 .action-item .expand-count{font-size:11px;color:#8e8ea0;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
 .action-item .expand-count a{color:#3b82f6;cursor:pointer;text-decoration:underline}
 @media (max-width:700px){.kpis{grid-template-columns:repeat(2,1fr);margin:10px 16px}.hdr{padding:14px 16px 10px}.pane{padding:16px}.rep-row{grid-template-columns:1fr}.action-item{grid-template-columns:1fr}}
+.topnav{display:flex;gap:4px;padding:10px 24px;background:#080812;border-bottom:1px solid #1f1f2e;overflow-x:auto;white-space:nowrap}
+.topnav a{color:#9ca3af;font-size:13px;padding:6px 12px;border-radius:6px;text-decoration:none;transition:background .15s,color .15s;font-weight:500}
+.topnav a:hover{background:#1a1a24;color:#e5e5ea}
+.topnav a.active{background:#3b82f6;color:#fff}
+.topnav .divider{width:1px;background:#1f1f2e;margin:0 4px}
+.topnav .ext::after{content:' \2197';font-size:11px;opacity:.6}
 </style>
 </head><body>
+<nav class="topnav">
+  <a href="/" class="active">📊 Breakdown</a>
+  <a href="/creative_index.html">📇 Creative Index</a>
+  <span class="divider"></span>
+  <a href="https://drive.google.com/drive/folders/1DfDDbQ8hOyvcaktNXRaoSNtXYZrtWO2s" target="_blank" class="ext">Drive Library</a>
+  <a href="https://www.notion.so/34a26136b372818d881fcefa231532ca" target="_blank" class="ext">Notion Plan</a>
+  <a href="https://github.com/davidemasi2/tokin-ads-dashboard" target="_blank" class="ext">GitHub</a>
+</nav>
 <div class="hdr">
 <h1>Creative Breakdown · Tokin Chews Portfolio</h1>
 <div class="sub">721 ads · $356,556 spend · $794,193 revenue · 2.23x ROAS · 97 clusters · 166 compliance flags</div>
