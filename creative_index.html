@@ -88,16 +88,33 @@ input[type=checkbox]{accent-color:#16a34a;width:16px;height:16px;cursor:pointer}
 </style>
 </head>
 <body>
-
-<nav class="topnav">
-  <a href="index.html">📊 Breakdown</a>
-  <a href="creative_index.html" class="active">📇 Creative Index</a>
-  <span class="divider"></span>
-  <a href="https://drive.google.com/drive/folders/1DfDDbQ8hOyvcaktNXRaoSNtXYZrtWO2s" target="_blank" class="ext">Drive Library</a>
-  <a href="https://www.notion.so/34a26136b372818d881fcefa231532ca" target="_blank" class="ext">Notion Plan</a>
-  <a href="https://github.com/davidemasi2/tokin-ads-dashboard" target="_blank" class="ext">GitHub</a>
-  <button id="reproduce-btn" class="reproduce-btn" disabled onclick="openReproduce()">🎬 Reproduce (0)</button>
+<nav class="tj-nav" style="display:flex;gap:4px;padding:10px 24px;background:#080812;border-bottom:1px solid #1f1f2e;overflow-x:auto;white-space:nowrap;font:500 13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
+  <a data-nav="/" href="/" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📊 Paid Breakdown</a>
+  <a data-nav="/organic_breakdown.html" href="/organic_breakdown.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📱 Organic IG</a>
+  <a data-nav="/creative_index.html" href="/creative_index.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📇 Creative Index</a>
+  <a data-nav="/reproduce.html" href="/reproduce.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">🔁 Reproduce</a>
+  <span style="width:1px;background:#1f1f2e;margin:0 6px"></span>
+  <a href="https://drive.google.com/drive/folders/1DfDDbQ8hOyvcaktNXRaoSNtXYZrtWO2s" target="_blank" rel="noopener" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">Drive Library ↗</a>
+  <a href="https://www.notion.so/34a26136b372818d881fcefa231532ca" target="_blank" rel="noopener" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">Notion Plan ↗</a>
+  <a href="https://github.com/davidemasi2/tokin-ads-dashboard" target="_blank" rel="noopener" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">GitHub ↗</a>
 </nav>
+<script>
+(function(){
+  var p = window.location.pathname;
+  if(p === '/index.html') p = '/';
+  if(p === '/creative_breakdown.html') p = '/';
+  document.querySelectorAll('nav.tj-nav a[data-nav]').forEach(function(a){
+    if(a.getAttribute('data-nav') === p){
+      a.style.background = '#3b82f6';
+      a.style.color = '#fff';
+    } else {
+      a.addEventListener('mouseenter', function(){ a.style.background='#1a1a24'; a.style.color='#e5e5ea'; });
+      a.addEventListener('mouseleave', function(){ a.style.background=''; a.style.color='#9ca3af'; });
+    }
+  });
+})();
+</script>
+
 
 <div class="hdr">
 <h1>Creative Index · All Ads Grouped by Asset</h1>

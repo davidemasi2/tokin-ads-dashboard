@@ -236,31 +236,33 @@ summary:hover{color:#c7c7d1}
 .topnav .ext::after{content:' \2197';font-size:11px;opacity:.6}
 </style>
 </head><body>
-<div class="nav-top" style="display:flex;gap:4px;padding:8px 24px;background:#050509;border-bottom:1px solid #1f1f2e;font-size:12px">
-  <a href="/" style="padding:6px 12px;color:#8e8ea0;border-radius:6px;text-decoration:none" onmouseover="this.style.background='#151524';this.style.color='#e5e5ea'" onmouseout="this.style.background='';this.style.color='#8e8ea0'">Dashboard</a>
-  <a href="/creative_breakdown.html" id="nav-paid" style="padding:6px 12px;color:#8e8ea0;border-radius:6px;text-decoration:none" onmouseover="this.style.background='#151524';this.style.color='#e5e5ea'" onmouseout="if(this.id!=='nav-active'){this.style.background='';this.style.color='#8e8ea0'}">Paid Creative</a>
-  <a href="/organic_breakdown.html" id="nav-organic" style="padding:6px 12px;color:#8e8ea0;border-radius:6px;text-decoration:none" onmouseover="this.style.background='#151524';this.style.color='#e5e5ea'" onmouseout="if(this.id!=='nav-active'){this.style.background='';this.style.color='#8e8ea0'}">Organic IG</a>
-</div>
+<nav class="tj-nav" style="display:flex;gap:4px;padding:10px 24px;background:#080812;border-bottom:1px solid #1f1f2e;overflow-x:auto;white-space:nowrap;font:500 13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
+  <a data-nav="/" href="/" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📊 Paid Breakdown</a>
+  <a data-nav="/organic_breakdown.html" href="/organic_breakdown.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📱 Organic IG</a>
+  <a data-nav="/creative_index.html" href="/creative_index.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📇 Creative Index</a>
+  <a data-nav="/reproduce.html" href="/reproduce.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">🔁 Reproduce</a>
+  <span style="width:1px;background:#1f1f2e;margin:0 6px"></span>
+  <a href="https://drive.google.com/drive/folders/1DfDDbQ8hOyvcaktNXRaoSNtXYZrtWO2s" target="_blank" rel="noopener" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">Drive Library ↗</a>
+  <a href="https://www.notion.so/34a26136b372818d881fcefa231532ca" target="_blank" rel="noopener" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">Notion Plan ↗</a>
+  <a href="https://github.com/davidemasi2/tokin-ads-dashboard" target="_blank" rel="noopener" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">GitHub ↗</a>
+</nav>
 <script>
 (function(){
-  const path = window.location.pathname;
-  const map = {'/creative_breakdown.html':'nav-paid','/organic_breakdown.html':'nav-organic'};
-  const id = map[path] || (path === '/' || path === '/index.html' ? null : null);
-  if(id){
-    const el = document.getElementById(id);
-    if(el){el.style.background='#151524';el.style.color='#fff';el.id='nav-active';}
-  }
+  var p = window.location.pathname;
+  if(p === '/index.html') p = '/';
+  if(p === '/creative_breakdown.html') p = '/';
+  document.querySelectorAll('nav.tj-nav a[data-nav]').forEach(function(a){
+    if(a.getAttribute('data-nav') === p){
+      a.style.background = '#3b82f6';
+      a.style.color = '#fff';
+    } else {
+      a.addEventListener('mouseenter', function(){ a.style.background='#1a1a24'; a.style.color='#e5e5ea'; });
+      a.addEventListener('mouseleave', function(){ a.style.background=''; a.style.color='#9ca3af'; });
+    }
+  });
 })();
 </script>
 
-<nav class="topnav">
-  <a href="index.html" class="active">📊 Breakdown</a>
-  <a href="creative_index.html">📇 Creative Index</a>
-  <span class="divider"></span>
-  <a href="https://drive.google.com/drive/folders/1DfDDbQ8hOyvcaktNXRaoSNtXYZrtWO2s" target="_blank" class="ext">Drive Library</a>
-  <a href="https://www.notion.so/34a26136b372818d881fcefa231532ca" target="_blank" class="ext">Notion Plan</a>
-  <a href="https://github.com/davidemasi2/tokin-ads-dashboard" target="_blank" class="ext">GitHub</a>
-</nav>
 <div class="hdr">
 <h1>Creative Breakdown · Tokin Chews Portfolio</h1>
 <div class="sub">721 ads · $356,556 spend · $794,193 revenue · 2.23x ROAS · 97 clusters · 166 compliance flags</div>
