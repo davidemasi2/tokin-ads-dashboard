@@ -74,10 +74,10 @@ a{color:#60a5fa;text-decoration:none}a:hover{text-decoration:underline}
 </head>
 <body>
 <nav class="tj-nav" style="display:flex;gap:4px;padding:10px 24px;background:#080812;border-bottom:1px solid #1f1f2e;overflow-x:auto;white-space:nowrap;font:500 13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
-  <a data-nav="/" href="/" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📊 Paid Breakdown</a>
-  <a data-nav="/organic_breakdown.html" href="/organic_breakdown.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📱 Organic IG</a>
-  <a data-nav="/creative_index.html" href="/creative_index.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📇 Creative Index</a>
-  <a data-nav="/reproduce.html" href="/reproduce.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">🔁 Reproduce</a>
+  <a data-nav="index" href="./" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📊 Paid Breakdown</a>
+  <a data-nav="organic" href="./organic_breakdown.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📱 Organic IG</a>
+  <a data-nav="index-creative" href="./creative_index.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">📇 Creative Index</a>
+  <a data-nav="reproduce" href="./reproduce.html" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">🔁 Reproduce</a>
   <span style="width:1px;background:#1f1f2e;margin:0 6px"></span>
   <a href="https://drive.google.com/drive/folders/1DfDDbQ8hOyvcaktNXRaoSNtXYZrtWO2s" target="_blank" rel="noopener" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">Drive Library ↗</a>
   <a href="https://www.notion.so/34a26136b372818d881fcefa231532ca" target="_blank" rel="noopener" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">Notion Plan ↗</a>
@@ -88,11 +88,13 @@ a{color:#60a5fa;text-decoration:none}a:hover{text-decoration:underline}
 </nav>
 <script>
 (function(){
-  var p = window.location.pathname;
-  if(p === '/index.html') p = '/';
-  if(p === '/creative_breakdown.html') p = '/';
+  var file = (window.location.pathname.split('/').pop() || '').toLowerCase();
+  var key = 'index';
+  if(file === 'organic_breakdown.html') key = 'organic';
+  else if(file === 'creative_index.html') key = 'index-creative';
+  else if(file === 'reproduce.html') key = 'reproduce';
   document.querySelectorAll('nav.tj-nav a[data-nav]').forEach(function(a){
-    if(a.getAttribute('data-nav') === p){
+    if(a.getAttribute('data-nav') === key){
       a.style.background = '#3b82f6';
       a.style.color = '#fff';
     } else {
