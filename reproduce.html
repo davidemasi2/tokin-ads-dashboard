@@ -84,7 +84,7 @@ a{color:#60a5fa;text-decoration:none}a:hover{text-decoration:underline}
   <a href="https://github.com/davidemasi2/tokin-ads-dashboard" target="_blank" rel="noopener" style="color:#9ca3af;padding:6px 12px;border-radius:6px;text-decoration:none">GitHub ↗</a>
   <span style="flex:1"></span>
   <span id="selectedCount" style="color:#8e8ea0;font-size:12px;align-self:center;padding-right:8px">0 selected</span>
-  <button id="reproduce-btn" onclick="window.open('reproduce.html','_blank')" disabled style="background:#16a34a;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600;white-space:nowrap">🎬 Reproduce (0)</button>
+  <button id="reproduce-btn" onclick="(typeof openReproduce==='function')?openReproduce():window.open('reproduce.html','_blank')" disabled style="background:#16a34a;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600;white-space:nowrap">🎬 Reproduce (0)</button>
 </nav>
 <script>
 (function(){
@@ -119,7 +119,7 @@ const flagCls = f => ({CLEAN:'flag-clean',Superlative:'flag-superlative','THC/CB
 const fmtMoney = n => n>0?'$'+Math.round(n).toLocaleString():'—';
 const fmtNum = n => n.toLocaleString();
 
-const COHORT = JSON.parse(sessionStorage.getItem('reproduceCohort')||'[]');
+const COHORT = JSON.parse(localStorage.getItem('reproduceCohort')||'[]');
 
 function renderKpis() {
   const kpis = $('kpis');
@@ -200,8 +200,8 @@ function renderCards() {
 
 function clearCohort() {
   if (confirm('Clear all '+COHORT.length+' selected creatives?')) {
-    sessionStorage.removeItem('reproduceCohort');
-    sessionStorage.removeItem('selectedUids');
+    localStorage.removeItem('reproduceCohort');
+    localStorage.removeItem('selectedUids');
     location.reload();
   }
 }
