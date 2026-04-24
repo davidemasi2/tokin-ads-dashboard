@@ -4,5 +4,22 @@
 <meta http-equiv="refresh" content="0; url=/">
 <script>window.location.replace('/');</script>
 </head><body>
+<div class="nav-top" style="display:flex;gap:4px;padding:8px 24px;background:#050509;border-bottom:1px solid #1f1f2e;font-size:12px">
+  <a href="/" style="padding:6px 12px;color:#8e8ea0;border-radius:6px;text-decoration:none" onmouseover="this.style.background='#151524';this.style.color='#e5e5ea'" onmouseout="this.style.background='';this.style.color='#8e8ea0'">Dashboard</a>
+  <a href="/creative_breakdown.html" id="nav-paid" style="padding:6px 12px;color:#8e8ea0;border-radius:6px;text-decoration:none" onmouseover="this.style.background='#151524';this.style.color='#e5e5ea'" onmouseout="if(this.id!=='nav-active'){this.style.background='';this.style.color='#8e8ea0'}">Paid Creative</a>
+  <a href="/organic_breakdown.html" id="nav-organic" style="padding:6px 12px;color:#8e8ea0;border-radius:6px;text-decoration:none" onmouseover="this.style.background='#151524';this.style.color='#e5e5ea'" onmouseout="if(this.id!=='nav-active'){this.style.background='';this.style.color='#8e8ea0'}">Organic IG</a>
+</div>
+<script>
+(function(){
+  const path = window.location.pathname;
+  const map = {'/creative_breakdown.html':'nav-paid','/organic_breakdown.html':'nav-organic'};
+  const id = map[path] || (path === '/' || path === '/index.html' ? null : null);
+  if(id){
+    const el = document.getElementById(id);
+    if(el){el.style.background='#151524';el.style.color='#fff';el.id='nav-active';}
+  }
+})();
+</script>
+
 <p style="font:14px system-ui;padding:40px;color:#666">Redirecting to <a href="/">dashboard home</a>...</p>
 </body></html>
